@@ -22,6 +22,11 @@
 #     You should have received a copy of the GNU General Public License
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
+# Modifications
+#     This file has been modified by blueCAPE's unofficial mingw patches for OpenFOAM.
+#     For more information about these patches, visit:
+#         http://www.bluecape.com.pt/blueCFD
+#
 # Script
 #     AllwmakeLibccmio
 #
@@ -55,6 +60,7 @@ then
     then
         echo "unpack download/$tarFile"
         tar -xzf download/$tarFile
+        patch -p0 < etc/tools/patch_libccmio
     else
         echo "no download/$tarFile to unpack"
     fi

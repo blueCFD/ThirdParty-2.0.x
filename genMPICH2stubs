@@ -1,0 +1,128 @@
+#! /bin/bash
+#------------------------------------------------------------------------------
+# License
+#     This file is part of blueCAPE's unofficial mingw patches for OpenFOAM.
+#     For more information about these patches, visit:
+#         http://www.bluecape.com.pt/blueCFD
+#
+#     OpenFOAM's official site: http://www.openfoam.com
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     genMPICH2stubs
+#
+# Description
+#     This script generates the link library and prepares the include 
+#   files for MPICH2.
+#
+#------------------------------------------------------------------------------
+
+function copy_and_link_mpich2
+{
+  cd "$BUILDDIR"
+
+  echo -e "\033[1m Purging installed mpich2 \033[0m"
+  rm -rf *
+  
+  echo -e "\033[1m copying necessary files \033[0m"
+  mkdir bin
+  mkdir lib
+  mkdir include
+  cp $SRCDIR/*.def .
+  if [ "$WM_ARCH_OPTION" = "64" ]; then
+    cp $SRCDIR/x86_64/include/* include/
+  else
+    cp $SRCDIR/i686/include/* include/
+  fi
+}
+
+function create_gcccompatible_library
+{
+  echo -e "\033[1m creating mpi.a \033[0m"
+  WM_DLLTOOL=`echo $WM_CC | sed s/gcc/dlltool/`
+  cd $BUILDDIR/lib
+  $WM_DLLTOOL -d ../mpich2.def -l libmpi.a -D MPICH2MPI.DLL
+}
+
+function patch_mpi_includes
+{
+
+  echo -e "\033[1m patching mpi.h \033[0m"
+  if [ "$WM_ARCH_OPTION" = "64" ]; then
+    cd $BUILDDIR/include
+echo '--- orig/include/mpi.h  2009-08-06 16:11:46.000000000 +0100
++++ mod/include/mpi.h 2009-10-12 12:59:08.000000000 +0100
+@@ -331,7 +331,11 @@
+ #define MPI_MODE_NOSUCCEED   16384 
+ 
+ /* Definitions that are determined by configure. */
++#if defined(USE_GCC) || defined(__GNUC__)
++typedef long long MPI_Aint;
++#else
+ typedef __int64 MPI_Aint;
++#endif
+ typedef int MPI_Fint;
+ /* FIXME: The following two definition are not defined by MPI and must not be
+    included in the mpi.h file, as the MPI namespace is reserved to the MPI 
+' | patch -p2
+
+  fi
+}
+
+function cleanup
+{
+  if [ -n "$BUILDDIR" -a -e "$BUILDDIR" ]; then
+    rm -rf "$BUILDDIR"
+  fi
+}
+
+#script start ------------------------------------------------------
+
+if isMinGW; then
+
+  BUILDDIR="$MPI_ARCH_PATH"
+  SRCDIR="$MPI_HOME/source"
+  
+ if [ $# -eq 1 -a "$1" = "clean" ]; then
+
+  echo -e "\033[1m Cleaning up MPICH2 stub... \033[0m"
+  cleanup
+
+ else
+
+  echo -e "\033[1m Generating MPICH2 stub... \033[0m"
+
+  mkdir -p "$BUILDDIR"
+  
+  if [ -d "$SRCDIR" ]; then
+
+    if [ ! -e "$BUILDDIR/lib/libmpi.a" ]; then
+      copy_and_link_mpich2
+      create_gcccompatible_library
+      patch_mpi_includes
+      echo -e "\033[1m All done. \033[0m"
+    else
+      echo -e "\033[1m MPICH2 stub is already built and ready to use. \033[0m"
+    fi
+
+  else
+    echo -e "\033[1m Failed to complete, due to lack of folder $SRCDIR \033[0m"
+  fi
+
+  cd $WM_THIRD_PARTY_DIR
+
+ fi
+
+fi
