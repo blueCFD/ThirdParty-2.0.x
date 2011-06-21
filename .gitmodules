@@ -1,0 +1,3 @@
+[submodule "scotch_5.1.11"]
+	path = scotch_5.1.11
+	url = gitosis@saovicente:scotch_5.1.11.git
