@@ -1,6 +1,6 @@
 [submodule "scotch_5.1.11"]
 	path = scotch_5.1.11
 	url = gitosis@saovicente:scotch_5.1.11.git
-[submodule "tecplot"]
-	path = tecplot
+[submodule "tecio"]
+	path = tecio
 	url = gitosis@saovicente:tecplot2009.git

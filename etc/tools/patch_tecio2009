@@ -1,0 +1,41 @@
+diff --git a/tecsrc/MASTER.h b/tecsrc/MASTER.h
+index 38c495d..7e59769 100644
+--- a/tecsrc/MASTER.h
++++ b/tecsrc/MASTER.h
+@@ -221,7 +221,7 @@
+ #include "stdafx.h"
+ 
+ #if defined MSWIN
+-#include "W__BASE.h"
++//#include "W__BASE.h"
+ #endif
+ 
+ #include <string>
+@@ -524,7 +524,8 @@
+ #    if XmVERSION == 1 && XmREVISION == 0
+ #    endif
+ #  else
+-#    include <X11/Intrinsic.h>
++/*#    include <X11/Intrinsic.h> */
++typedef void *Widget;
+ #  endif
+ #endif
+ 
+diff --git a/tecsrc/TECXXX.h b/tecsrc/TECXXX.h
+index a61539e..bff7df6 100644
+--- a/tecsrc/TECXXX.h
++++ b/tecsrc/TECXXX.h
+@@ -157,10 +157,11 @@
+ #if defined (TECPLOTKERNEL)
+ /* CORE SOURCE CODE REMOVED */
+ #else /* !TECPLOTKERNAL && !MAKEARCHIVE */
+-# define LIBCALL STDCALL
+-# define LIBFUNCTION EXTERNC DLLIMPORT
++# define LIBCALL
++# define LIBFUNCTION EXTERNC
+ #endif
+ 
++
+ /*
+  *  V11.3 tecio functions
+  */
