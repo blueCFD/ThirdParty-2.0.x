@@ -45,60 +45,123 @@ fi
 . etc/tools/makeExtraThirdPartyFunctions
 
 
-echo "========================================"
-echo "Build Scotch decomposition library"
-echo
+echo ========================================
+echo "Build Scotch decomposition library $SCOTCH_VERSION"
+echo "    $SCOTCH_ARCH_PATH"
 
 #un/relink the Makefile.inc, since now we have the mingw versions!
-unlink scotch_5.1/src/Makefile.inc
-ln -s Make.inc/Makefile.inc.$WM_COMPILER scotch_5.1/src/Makefile.inc
+unlink $SCOTCH_VERSION/src/Makefile.inc
+ln -s  $SCOTCH_VERSION/src/Makefile.inc
 
-createBinIncludeLib $WM_SCOTCH_PLATFORMS_DIR
-mkdir -p $FOAM_LIBBIN 2>/dev/null
 
-if [ -r $WM_SCOTCH_PLATFORMS_DIR/lib/libscotch.dll -a \
-       -r $WM_SCOTCH_PLATFORMS_DIR/lib/libscotcherr.dll -a \
-       -r $WM_SCOTCH_PLATFORMS_DIR/lib/libscotcherrexit.dll ]
+if [ -f $SCOTCH_ARCH_PATH/include/scotch.h \
+  -a -r $FOAM_EXT_LIBBIN/libscotch.dll \
+  -a -r $FOAM_EXT_LIBBIN/libscotcherr.dll \
+  -a -r $FOAM_EXT_LIBBIN/libscotcherrexit.dll ]
 then
-(
-    echo "have scotch shared libraries in $WM_SCOTCH_PLATFORMS_DIR/lib"
-    set -x
-    cp $WM_SCOTCH_PLATFORMS_DIR/lib/libscotch*.* $FOAM_LIBBIN
-)
+    echo "    scotch header in $SCOTCH_ARCH_PATH/include"
+    echo "    scotch libs   in $FOAM_EXT_LIBBIN"
+    echo
 else
 (
     set -x
-    cd scotch_5.1/src || exit 1
+    cd $SCOTCH_VERSION/src || exit 1
 
-    make scotch -j $WM_NCOMPPROCS && \
-    cp $WM_SCOTCH_PLATFORMS_DIR/lib/libscotch*.* $FOAM_LIBBIN
+    prefixDIR=$SCOTCH_ARCH_PATH
+    libDIR=$FOAM_EXT_LIBBIN
+
+    mkdir -p $prefixDIR 2>/dev/null
+    mkdir -p $libDIR 2>/dev/null
+
+    configOpt="prefix=$prefixDIR libdir=$libDIR"
+
+    makeFile=Make.inc/Makefile.inc.$WM_COMPILER
+
+    if [ -f $makeFile -a ! -f Makefile.inc ]
+    then
+        rm -f Makefile.inc
+        ln -s $makeFile Makefile.inc
+    fi
+
+    [ -f Makefile.inc ] || {
+        echo " Error: scotch needs an appropriate Makefile.inc"
+        exit 1
+    }
+
+    make realclean 2>/dev/null  # for safety
+
+    make -j $WM_NCOMPPROCS scotch \
+    && make $configOpt install
+
+    # cleanup, could also remove Makefile.inc
+    make realclean 2>/dev/null
 )
 fi
 
-if [ -d "$MPI_ARCH_PATH" ]
+# verify existence of scotch include
+[ -f $SCOTCH_ARCH_PATH/include/scotch.h ] || {
+    echo
+    echo "    WARNING: required include file 'scotch.h' not found!"
+    echo
+}
+
+# build ptscotch if MPI (ThirdParty or system) is available
+if [ "${FOAM_MPI:-dummy}" != dummy ]
 then
-    echo "========================================"
-    echo "Build PTScotch decomposition library (requires MPI)"
+    echo ========================================
+    echo "Build PTScotch decomposition library $SCOTCH_VERSION (uses MPI)"
+    echo "    $SCOTCH_ARCH_PATH"
     echo
 
-    mkdir -p $FOAM_MPI_LIBBIN 2>/dev/null
-
-    if [ -r $WM_SCOTCH_PLATFORMS_DIR/lib/libptscotch.dll -a \
-           -r $WM_SCOTCH_PLATFORMS_DIR/lib/libptscotcherr.dll -a \
-           -r $WM_SCOTCH_PLATFORMS_DIR/lib/libptscotcherrexit.dll ]
+    if [ -f $SCOTCH_ARCH_PATH/include/$FOAM_MPI/ptscotch.h \
+      -a -r $FOAM_EXT_LIBBIN/libptscotch.dll \
+      -a -r $FOAM_EXT_LIBBIN/libptscotcherr.dll \
+      -a -r $FOAM_EXT_LIBBIN/libptscotcherrexit.dll ]
     then
-    (
-        echo "have ptscotch shared libraries in $WM_SCOTCH_PLATFORMS_DIR/lib"
-        set -x
-        cp $WM_SCOTCH_PLATFORMS_DIR/lib/libptscotch*.* $FOAM_MPI_LIBBIN
-    )
+        echo "    ptscotch header in $SCOTCH_ARCH_PATH/include/$FOAM_MPI"
+        echo "    ptscotch libs   in $FOAM_EXT_LIBBIN/$FOAM_MPI"
+        echo
     else
     (
         set -x
-        cd scotch_5.1/src || exit 1
+        cd $SCOTCH_VERSION/src || exit 1
 
-        make ptscotch -j $WM_NCOMPPROCS && \
-        cp $WM_SCOTCH_PLATFORMS_DIR/lib/libptscotch*.* $FOAM_MPI_LIBBIN
+        prefixDIR=$SCOTCH_ARCH_PATH
+        libDIR=$FOAM_EXT_LIBBIN/$FOAM_MPI
+        incDIR=$SCOTCH_ARCH_PATH/include/$FOAM_MPI
+
+        mkdir -p $prefixDIR 2>/dev/null
+        mkdir -p $libDIR 2>/dev/null
+
+        configOpt="prefix=$prefixDIR libdir=$libDIR includedir=$incDIR"
+
+        makeFile=Make.inc/Makefile.inc.$WM_COMPILER
+
+        if [ -f $makeFile -a ! -f Makefile.inc ]
+        then
+            rm -f Makefile.inc
+            ln -s $makeFile Makefile.inc
+        fi
+
+        [ -f Makefile.inc ] || {
+            echo " Error: scotch needs an appropriate Makefile.inc"
+            exit 1
+        }
+
+        make realclean 2>/dev/null  # for safety
+
+        make -j $WM_NCOMPPROCS ptscotch \
+        && make $configOpt install
+
+        # cleanup, could also remove Makefile.inc
+        make realclean 2>/dev/null
     )
     fi
+
+    # verify existence of scotch include
+    [ -f $SCOTCH_ARCH_PATH/include/$FOAM_MPI/ptscotch.h ] || {
+        echo
+        echo "    WARNING: required include file 'ptscotch.h' not found!"
+        echo
+    }
 fi

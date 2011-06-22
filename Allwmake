@@ -323,6 +323,15 @@ then
 
         configOpt="prefix=$prefixDIR libdir=$libDIR includedir=$incDIR"
 
+        # this needs generalizing
+        makeFile=../../etc/wmakeFiles/scotch/Makefile.inc.i686_pc_linux2.shlib-OpenFOAM
+
+        if [ -f $makeFile -a ! -f Makefile.inc ]
+        then
+            rm -f Makefile.inc
+            ln -s $makeFile Makefile.inc
+        fi
+
         [ -f Makefile.inc ] || {
             echo " Error: scotch needs an appropriate Makefile.inc"
             exit 1
