@@ -49,10 +49,7 @@ echo ========================================
 echo "Build Scotch decomposition library $SCOTCH_VERSION"
 echo "    $SCOTCH_ARCH_PATH"
 
-#un/relink the Makefile.inc, since now we have the mingw versions!
-unlink $SCOTCH_VERSION/src/Makefile.inc
-ln -s  $SCOTCH_VERSION/src/Makefile.inc
-
+scotchMakefile=Make.inc/Makefile.inc.$WM_COMPILER
 
 if [ -f $SCOTCH_ARCH_PATH/include/scotch.h \
   -a -r $FOAM_EXT_LIBBIN/libscotch.dll \
@@ -75,12 +72,10 @@ else
 
     configOpt="prefix=$prefixDIR libdir=$libDIR"
 
-    makeFile=Make.inc/Makefile.inc.$WM_COMPILER
-
-    if [ -f $makeFile -a ! -f Makefile.inc ]
+    if [ -f $scotchMakefile ]
     then
         rm -f Makefile.inc
-        ln -s $makeFile Makefile.inc
+        ln -s $scotchMakefile Makefile.inc
     fi
 
     [ -f Makefile.inc ] || {
@@ -135,12 +130,10 @@ then
 
         configOpt="prefix=$prefixDIR libdir=$libDIR includedir=$incDIR"
 
-        makeFile=Make.inc/Makefile.inc.$WM_COMPILER
-
-        if [ -f $makeFile -a ! -f Makefile.inc ]
+        if [ -f $scotchMakefile ]
         then
             rm -f Makefile.inc
-            ln -s $makeFile Makefile.inc
+            ln -s $scotchMakefile Makefile.inc
         fi
 
         [ -f Makefile.inc ] || {
