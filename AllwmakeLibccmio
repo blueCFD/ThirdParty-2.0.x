@@ -34,7 +34,7 @@
 #     Get and build CD-adapco's ccmio library
 #
 #------------------------------------------------------------------------------
-packageDir=libccmio-2.6.1
+packageDir=libccmio-`. etc/defaults.sh ; echo \$libccmio_version`
 
 #------------------------------------------------------------------------------
 # run from third-party directory only

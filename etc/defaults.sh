@@ -73,3 +73,5 @@ qt_version=4.7.3
 cmake_version=2.8.4
 
 tecio_version=2009
+
+libccmio_version=2.6.1
