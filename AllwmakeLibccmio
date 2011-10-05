@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -35,8 +35,6 @@
 #
 #------------------------------------------------------------------------------
 packageDir=libccmio-2.6.1
-tarFile=$packageDir.tar.gz
-url="https://wci.llnl.gov/codes/visit/3rd_party/$tarFile"
 
 #------------------------------------------------------------------------------
 # run from third-party directory only
@@ -50,20 +48,35 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
 . etc/tools/ThirdPartyFunctions
 #------------------------------------------------------------------------------
 
+usage()
+{
+    cat<<USAGE
+
+* The license of the libccmio library is proprietary:
+
+    Users wishing to make use of its functionality should contact CD-Adapco
+    for possible download and terms of use.
+
+
+Usage: ${0##*/}
+
+* This script will install the libccmio library
+* After obtaining the $packageDir library, place in folder
+
+    $WM_THIRD_PARTY_DIR/$packageDir/
+
+USAGE
+    exit 1
+}
+
 
 # get tar.gz file if required
 if [ ! -d ${packageDir} ]
 then
-    downloadFile $tarFile $url
-
-    if [ -e download/$tarFile ]
-    then
-        echo "unpack download/$tarFile"
-        tar -xzf download/$tarFile
-        patch -p0 < etc/tools/patch_libccmio
-    else
-        echo "no download/$tarFile to unpack"
-    fi
+    usage
+elif [ -z "`grep _WIN32 $packageDir/libccmio/ccmio.h`" ]
+then
+    patch -p0 < etc/tools/patch_libccmio
 fi
 
 set -x
