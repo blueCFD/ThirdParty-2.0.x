@@ -60,6 +60,7 @@ BINUTILSVERSION="binutils-2.21"
 #MinGW versions
 MINGW32RTVERSION="mingwrt-3.18"
 W32APIVERSION="w32api-3.14"
+MINGW_W64_VERSION="1.x" #1.x or 2.x
 
 #LOG FOLDER
 LOG_FOLDER="$WM_THIRD_PARTY_DIR/../buildLogs"
@@ -163,7 +164,7 @@ MPFR_TARFILE="${MPFRVERSION}.tar.bz2"
 MPC_TARFILE="${MPCVERSION}.tar.gz"
 BINUTILS_TARFILE="${BINUTILSVERSION}.tar.bz2"
 
-MINGW64_TARFILE="mingw-w64-v1.0.tar.gz"
+MINGW64_TARFILE="mingw-w64-v${MINGW_W64_VERSION}.tar.gz"
 
 #MinGW versions
 MINGW32RT_TARFILE="${MINGW32RTVERSION}-mingw32-dev.tar.gz"
@@ -176,7 +177,7 @@ MPFR_URL="ftp://ftp.gnu.org/gnu/mpfr/${MPFR_TARFILE}"
 MPC_URL="http://www.multiprecision.org/mpc/download/${MPC_TARFILE}"
 BINUTILS_URL="ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/binutils/releases/${BINUTILS_TARFILE}"
 
-MINGW64_URL="http://mingw-w64.svn.sourceforge.net/viewvc/mingw-w64/branches/releases/v1.0/?view=tar"
+MINGW64_URL="http://mingw-w64.svn.sourceforge.net/viewvc/mingw-w64/stable/v${MINGW_W64_VERSION}/?view=tar"
 
 #MinGW versions
 MINGW32RT_URL="http://downloads.sourceforge.net/project/mingw/MinGW/BaseSystem/RuntimeLibrary/MinGW-RT/${MINGW32RTVERSION}/${MINGW32RT_TARFILE}?use_mirror=mesh"

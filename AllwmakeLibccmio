@@ -76,7 +76,7 @@ then
     usage
 elif [ -z "`grep _WIN32 $packageDir/libccmio/ccmio.h`" ]
 then
-    patch -p0 < etc/tools/patch_libccmio
+    patch -p0 < etc/patches/patch_libccmio
 fi
 
 set -x

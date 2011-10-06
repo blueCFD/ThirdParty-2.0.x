@@ -127,7 +127,7 @@ function patch_mpi_includes
   mv -f mpi.h_tmp mpi.h
 
   if [ "$WM_ARCH_OPTION" = "64" ]; then
-    patch -p0 --binary < $WM_THIRD_PARTY_DIR/tools/patch_msmpi_mpi_h
+    patch -p0 --binary < $WM_THIRD_PARTY_DIR/patches/patch_msmpi_mpi_h
   fi
 
 echo '--- mpi.h_orig  2011-01-18 15:11:38.284485101 +0000
