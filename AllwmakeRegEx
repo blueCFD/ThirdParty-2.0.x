@@ -57,7 +57,7 @@ apply_regex_w64_patch()
 {
   cd "$WM_THIRD_PARTY_DIR/$REGEXNAMENVERSION"
 
-  patch -p1 < $WM_THIRD_PARTY_DIR/patches/patch_$REGEXNAMENVERSION
+  patch -p1 < $WM_THIRD_PARTY_DIR/etc/patches/patch_$REGEXNAMENVERSION
 
   cd $WM_THIRD_PARTY_DIR
 }
