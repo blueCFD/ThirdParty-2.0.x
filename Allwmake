@@ -366,6 +366,10 @@ echo Build Tecio
 if [ -d tecio ]
 then
 (
+    if isMinGW && [ ! -e "mingw.patch.complete" ]; then
+        patch -p1 < $WM_THIRD_PARTY_DIR/etc/patches/patch_tecio2009 && \
+          touch mingw.patch.complete
+    fi
     set -x
     cd tecio || exit 1
     cpMakeFiles tecio
