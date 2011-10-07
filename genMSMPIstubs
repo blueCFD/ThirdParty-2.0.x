@@ -90,11 +90,13 @@ unpack_files()
 
 }
 
+
 must_build_pexports()
 {
   cd $WM_THIRD_PARTY_DIR
   ./build-pexports
 }
+
 
 function copy_and_link_msmpi
 {
@@ -117,6 +119,7 @@ function create_gcccompatible_library
   WM_DLLTOOL=`echo $WM_CC | sed s/gcc/dlltool/`
   $WM_DLLTOOL -d libmpi.def -l libmpi.a -D msmpi.dll
 }
+
 
 function patch_mpi_includes
 {
@@ -155,6 +158,7 @@ echo '--- mpi.h_orig  2011-01-18 15:11:38.284485101 +0000
 
 }
 
+
 function cleanup
 {
   if [ -n "$BUILDDIR" -a -e "$BUILDDIR" ]; then
@@ -169,51 +173,51 @@ if isMinGW; then
   BUILDDIR="$MPI_ARCH_PATH"
   SRCDIR="$MPI_HOME/source"
 
- if [ $# -eq 1 -a "$1" = "clean" ]; then
+  if [ $# -eq 1 -a "$1" = "clean" ]; then
 
-  echo -e "\033[1m Cleaning up MSMPI stub... \033[0m"
-  cleanup
-
- else
-
-  if test -z "x`which 7z`" ; then
-    echo "Please install 7zip. In Ubuntu, the package name is p7zip-full."
-    echo "If 7zip isn't available for your Linux distribution, please go to www.7zip.org to download the generic version."
-    exit 1
-  fi
-
-  mkdir -p "$BUILDDIR"
-  if [ ! -d "$SRCDIR" ]; then mkdir -p "$SRCDIR"; fi
-
-  if [ -d "$SRCDIR" ]; then
-
-    if [ ! -e "$BUILDDIR/lib/libmpi.a" ]; then
-
-      echo -e "\033[1m Downloading necessary MSMPI installation files...\033[0m"
-      download_files
-
-      echo -e "\033[1m Unpacking necessary MSMPI installation files...\033[0m"
-      unpack_files
-
-      if test "x`which pexports`" = "x" ; then
-        must_build_pexports
-      fi
-
-      echo -e "\033[1m Generating MSMPI stub... \033[0m"
-
-      copy_and_link_msmpi
-      create_gcccompatible_library
-      patch_mpi_includes
-      echo -e "\033[1m All done. \033[0m"
-    else
-      echo -e "\033[1m MSMPI stub is already built and ready to use. \033[0m"
-    fi
+    echo -e "\033[1m Cleaning up MSMPI stub... \033[0m"
+    cleanup
 
   else
-    echo -e "\033[1m Failed to complete, due to lack of folder $SRCDIR \033[0m"
+
+    if test -z "x`which 7z`" ; then
+      echo "Please install 7zip. In Ubuntu, the package name is p7zip-full."
+      echo "If 7zip isn't available for your Linux distribution, please go to www.7zip.org to download the generic version."
+      exit 1
+    fi
+
+    mkdir -p "$BUILDDIR"
+    if [ ! -d "$SRCDIR" ]; then mkdir -p "$SRCDIR"; fi
+
+    if [ -d "$SRCDIR" ]; then
+
+      if [ ! -e "$BUILDDIR/lib/libmpi.a" ]; then
+
+        echo -e "\033[1m Downloading necessary MSMPI installation files...\033[0m"
+        download_files
+
+        echo -e "\033[1m Unpacking necessary MSMPI installation files...\033[0m"
+        unpack_files
+
+        if test "x`which pexports`" = "x" ; then
+          must_build_pexports
+        fi
+
+        echo -e "\033[1m Generating MSMPI stub... \033[0m"
+
+        copy_and_link_msmpi
+        create_gcccompatible_library
+        patch_mpi_includes
+        echo -e "\033[1m All done. \033[0m"
+      else
+        echo -e "\033[1m MSMPI stub is already built and ready to use. \033[0m"
+      fi
+
+    else
+      echo -e "\033[1m Failed to complete, due to lack of folder $SRCDIR \033[0m"
+    fi
+
+    cd $WM_THIRD_PARTY_DIR
+
   fi
-
-  cd $WM_THIRD_PARTY_DIR
-
- fi
 fi
