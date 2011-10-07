@@ -1,5 +1,5 @@
 diff --git a/tecsrc/MASTER.h b/tecsrc/MASTER.h
-index 38c495d..7e59769 100644
+index 38c495d..d06c371 100644
 --- a/tecsrc/MASTER.h
 +++ b/tecsrc/MASTER.h
 @@ -221,7 +221,7 @@
@@ -16,26 +16,23 @@ index 38c495d..7e59769 100644
  #    endif
  #  else
 -#    include <X11/Intrinsic.h>
-+/*#    include <X11/Intrinsic.h> */
++//#    include <X11/Intrinsic.h>
 +typedef void *Widget;
  #  endif
  #endif
  
 diff --git a/tecsrc/TECXXX.h b/tecsrc/TECXXX.h
-index a61539e..bff7df6 100644
+index dfcee04..3f4f511 100644
 --- a/tecsrc/TECXXX.h
 +++ b/tecsrc/TECXXX.h
-@@ -157,10 +157,11 @@
- #if defined (TECPLOTKERNEL)
- /* CORE SOURCE CODE REMOVED */
+@@ -161,8 +161,8 @@
+ # define LIBCALL STDCALL
+ # define LIBFUNCTION EXTERNC DLLEXPORT
  #else /* !TECPLOTKERNAL && !MAKEARCHIVE */
 -# define LIBCALL STDCALL
 -# define LIBFUNCTION EXTERNC DLLIMPORT
-+# define LIBCALL
-+# define LIBFUNCTION EXTERNC
++# define LIBCALL 
++# define LIBFUNCTION EXTERNC 
  #endif
  
-+
  /*
-  *  V11.3 tecio functions
-  */
