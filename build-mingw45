@@ -148,11 +148,6 @@ W32API_BDIR="$buildBASE/$W32APIVERSION"
 MINGW_W64_BDIR="$buildBASE/mingw-w64-crt"
 
 
-#
-# Set the number of cores to build on
-#
-getNCOMPPROCS -v
-
 #set architecture bits
 ABI=$WM_ARCH_OPTION
 
