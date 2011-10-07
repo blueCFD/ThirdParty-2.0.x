@@ -80,10 +80,14 @@ unpack_files()
   echo "Unpacking files..."
 
   rm $SRCDIR/*
-  7z x $DownloadRepository/$INSTPACK_FILE -o$SRCDIR/ product.cab
+  7z x $DownloadRepository/$INSTPACK_FILE -o$SRCDIR/ _*
   cd $SRCDIR
-  7z x product.cab mpi*.h msmpi.dll
-
+  TOUNPACK=`ls -1A _*`
+  7z x $TOUNPACK
+  rm $TOUNPACK
+  find . -name "_*" | xargs grep 'MPI_INCLUDED' -sl | xargs -I {} mv {} mpi.h
+  find . -name "_*" | xargs grep 'mpich2mpi.pdb' -sl | xargs -I {} mv {} mpich2mpi.dll
+  rm _*
 }
 
 
@@ -196,6 +200,7 @@ if isMinGW; then
         fi
 
         echo -e "\033[1m Generating MPICH2 stub... \033[0m"
+exit 0
 
         copy_and_link_mpich2
         create_gcccompatible_library
