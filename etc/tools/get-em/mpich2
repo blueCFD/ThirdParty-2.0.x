@@ -23,7 +23,7 @@
 #
 #------------------------------------------------------------------------------
 
-versionVar="FOAM_LIB"
+versionVar="FOAM_MPI"
 appName="mpich2"
 appDefaultSep="-"
 appFileExt="tar.gz"
