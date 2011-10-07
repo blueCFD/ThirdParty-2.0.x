@@ -121,11 +121,6 @@ LOG_FOLDER=`( cd "$LOG_FOLDER" && pwd )`
 BINUTILS_BDIR="$buildBASE/$BINUTILSVERSION"
 
 
-#
-# Set the number of cores to build on
-#
-getNCOMPPROCS -v
-
 #set architecture bits
 ABI=$WM_ARCH_OPTION
 

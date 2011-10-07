@@ -110,11 +110,6 @@ if [ -d "$PREFIX" ]; then
   esac
 fi
 
-#
-# Set the number of cores to build on
-#
-getNCOMPPROCS -v
-
 #set architecture bits
 ABI=$WM_ARCH_OPTION
 
