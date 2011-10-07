@@ -41,7 +41,7 @@ if ! isMinGW; then
   exit 1
 fi
 
-. etc/tools/makeThirdPartyFunctions
+. etc/tools/ThirdPartyFunctions
 . etc/tools/makeExtraThirdPartyFunctions
 
 
