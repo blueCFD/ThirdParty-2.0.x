@@ -86,6 +86,7 @@ unpack_files()
   7z x $TOUNPACK > /dev/null
   rm $TOUNPACK
   find . -name "_*" | xargs grep 'MPI_INCLUDED' -sl | xargs -I {} mv {} mpi.h
+  find . -name "_*" | xargs grep 'MPIO_INCLUDE' -sl | xargs -I {} mv {} mpio.h
   find . -name "_*" | xargs grep -e 'mpich2mpi\.dll.MPID_Wtick' -sl | xargs -I {} mv {} mpich2mpi.dll
   rm _*
 }
