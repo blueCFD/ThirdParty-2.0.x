@@ -109,12 +109,8 @@ function copy_and_link_mpich2
   mkdir bin
   mkdir lib
   mkdir include
-  cp $SRCDIR/*.def .
-  if [ "$WM_ARCH_OPTION" = "64" ]; then
-    cp $SRCDIR/x86_64/include/* include/
-  else
-    cp $SRCDIR/i686/include/* include/
-  fi
+  cp $SRCDIR/*.dll lib/
+  cp $SRCDIR/*.h include/
 }
 
 
@@ -200,7 +196,6 @@ if isMinGW; then
         fi
 
         echo -e "\033[1m Generating MPICH2 stub... \033[0m"
-exit 0
 
         copy_and_link_mpich2
         create_gcccompatible_library
