@@ -22,17 +22,49 @@ index 38c495d..d06c371 100644
  #endif
  
 diff --git a/tecsrc/TECXXX.h b/tecsrc/TECXXX.h
-index dfcee04..3f4f511 100644
+index dfcee04..143b771 100644
 --- a/tecsrc/TECXXX.h
 +++ b/tecsrc/TECXXX.h
-@@ -161,8 +161,8 @@
- # define LIBCALL STDCALL
- # define LIBFUNCTION EXTERNC DLLEXPORT
- #else /* !TECPLOTKERNAL && !MAKEARCHIVE */
+@@ -130,7 +130,7 @@
+ #endif /* EXTERN_C */
+ 
+ #if !defined (STDCALL)
+-# if defined MSWIN
++# if defined MSWIN && !defined (__GNUC__)
+ #  define STDCALL __stdcall
+ # else /* !MSWIN */
+ #  define STDCALL
+@@ -138,7 +138,7 @@
+ #endif /* STDCALL */
+ 
+ #if !defined (DLLEXPORT)
+-# if defined (MSWIN)
++# if defined (MSWIN) && !defined (__GNUC__)
+ #  define DLLEXPORT _declspec (dllexport)
+ # else
+ #  define DLLEXPORT
+@@ -154,15 +154,15 @@
+ #endif /* DLLIMPORT */
+ 
+ 
+-#if defined (TECPLOTKERNEL)
+-# define LIBCALL
+-# define LIBFUNCTION
+-#elif defined (MAKEARCHIVE)
+-# define LIBCALL STDCALL
+-# define LIBFUNCTION EXTERNC DLLEXPORT
+-#else /* !TECPLOTKERNAL && !MAKEARCHIVE */
 -# define LIBCALL STDCALL
 -# define LIBFUNCTION EXTERNC DLLIMPORT
-+# define LIBCALL 
-+# define LIBFUNCTION EXTERNC 
++#if defined (TECPLOTKERNEL)
++# define LIBCALL
++# define LIBFUNCTION
++#elif defined (MAKEARCHIVE)
++# define LIBCALL STDCALL
++# define LIBFUNCTION EXTERNC DLLEXPORT
++#else /* !TECPLOTKERNAL && !MAKEARCHIVE */
++# define LIBCALL STDCALL
++# define LIBFUNCTION EXTERNC DLLIMPORT
  #endif
  
  /*
