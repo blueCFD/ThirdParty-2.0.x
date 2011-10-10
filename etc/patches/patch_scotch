@@ -321,7 +321,7 @@ index 574a3b0..c863c50 100644
  					-$(MKDIR) ../bin
  
 diff --git a/src/libscotch/Makefile b/src/libscotch/Makefile
-index d9d4bec..746fdb9 100644
+index d9d4bec..cc7babf 100644
 --- a/src/libscotch/Makefile
 +++ b/src/libscotch/Makefile
 @@ -39,6 +39,11 @@ libdir		= ../../lib
@@ -388,7 +388,7 @@ index d9d4bec..746fdb9 100644
  
  scotch.h			:	dummysizes$(EXE)			\
  					library.h
-@@ -2526,7 +2531,7 @@ scotchf.h			:	dummysizes$(EXE) 			\
+@@ -2526,11 +2531,11 @@ scotchf.h			:	dummysizes$(EXE) 			\
  					./dummysizes$(EXE) libraryf.h scotchf.h
  
  libptscotch$(LIB)		:	$(LIBPTSCOTCHDEPS) $(LIBSCOTCHDEPS)
@@ -397,15 +397,11 @@ index d9d4bec..746fdb9 100644
  					-$(RANLIB) $(@)
  
  libscotch$(LIB)			:	$(LIBSCOTCHDEPS)
-@@ -2542,7 +2547,7 @@ libptscotcherrexit$(LIB)	:	library_error_exit$(OBJ)
- 					-$(RANLIB) $(@)
- 
- libscotcherr$(LIB)		:	library_error$(OBJ)
 -					$(AR) $(ARFLAGS) $(@) $(?)
 +					$(AR) $(ARFLAGS) $(@) $(?) $(ARSFLAGS)
  					-$(RANLIB) $(@)
  
- libscotcherrexit$(LIB)		:	library_error_exit$(OBJ)
+ libptscotcherr$(LIB)		:	library_error$(OBJ)
 diff --git a/src/libscotch/cpscotch_headers.sh b/src/libscotch/cpscotch_headers.sh
 new file mode 100644
 index 0000000..591a532
