@@ -1,9 +1,9 @@
 diff --git a/src/Make.inc/Makefile.inc.amd64-mingw32msvc b/src/Make.inc/Makefile.inc.amd64-mingw32msvc
 new file mode 100644
-index 0000000..c13da7f
+index 0000000..5afae9a
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.amd64-mingw32msvc
-@@ -0,0 +1,35 @@
+@@ -0,0 +1,34 @@
 +.SUFFIXES: .dll .a .def
 +
 +EXE  = .exe
@@ -12,11 +12,6 @@ index 0000000..c13da7f
 +CPLIB  = .*
 +OBJ  = .o
 +
-+MAKE = make
-+AR = ar
-+ARFLAGS  = -ruv
-+
-+CAT  = cat
 +CCS  = $(WM_CC) -m$(WM_ARCH_OPTION)
 +CCSS = sh cpscotch_headers.sh mingw64
 +CCP     = $(WM_CC) -m$(WM_ARCH_OPTION)
@@ -32,19 +27,23 @@ index 0000000..c13da7f
 +LIBLDFLAGS_PT  = -shared $(LDFLAGS_P1_PT) -Wl,--output-def,$(*).def,--out-implib,$(*).a,--enable-auto-import,--strip-all
 +LDFLAGS_PT = $(LDFLAGS_P1_PT) $(LDFLAGS)
 +
-+CP = cp
-+LEX  = flex
-+LN = ln
-+MKDIR  = mkdir
-+MV = mv
-+RANLIB = ranlib
-+YACC = bison -y
++AR      = gcc
++ARFLAGS = -shared -o $(LIBLDFLAGS)
++CAT  = cat
++CP      = cp
++LEX     = flex -Pscotchyy -olex.yy.c
++LN      = ln
++MAKE = make
++MKDIR   = mkdir
++MV      = mv
++RANLIB  = echo
++YACC    = bison -pscotchyy -y -b y
 diff --git a/src/Make.inc/Makefile.inc.i586-mingw32msvc b/src/Make.inc/Makefile.inc.i586-mingw32msvc
 new file mode 100644
-index 0000000..36e0b13
+index 0000000..38e6c1c
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.i586-mingw32msvc
-@@ -0,0 +1,35 @@
+@@ -0,0 +1,34 @@
 +.SUFFIXES: .dll .a .def
 +
 +EXE  = .exe
@@ -53,11 +52,6 @@ index 0000000..36e0b13
 +CPLIB  = .*
 +OBJ  = .o
 +
-+MAKE = make
-+AR = ar
-+ARFLAGS  = -ruv
-+
-+CAT  = cat
 +CCS  = $(WM_CC) -m$(WM_ARCH_OPTION)
 +CCSS = sh cpscotch_headers.sh mingw32
 +CCP     = $(WM_CC) -m$(WM_ARCH_OPTION)
@@ -73,19 +67,23 @@ index 0000000..36e0b13
 +LIBLDFLAGS_PT  = -shared $(LDFLAGS_P1_PT) -Wl,--output-def,$(*).def,--out-implib,$(*).a,--enable-auto-import,--strip-all
 +LDFLAGS_PT = $(LDFLAGS_P1_PT) $(LDFLAGS)
 +
-+CP = cp
-+LEX  = flex
-+LN = ln
-+MKDIR  = mkdir
-+MV = mv
-+RANLIB = ranlib
-+YACC = bison -y
++AR      = gcc
++ARFLAGS = -shared -o $(LIBLDFLAGS)
++CAT  = cat
++CP      = cp
++LEX     = flex -Pscotchyy -olex.yy.c
++LN      = ln
++MAKE = make
++MKDIR   = mkdir
++MV      = mv
++RANLIB  = echo
++YACC    = bison -pscotchyy -y -b y
 diff --git a/src/Make.inc/Makefile.inc.i686-w64-mingw32 b/src/Make.inc/Makefile.inc.i686-w64-mingw32
 new file mode 100644
-index 0000000..36e0b13
+index 0000000..38e6c1c
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.i686-w64-mingw32
-@@ -0,0 +1,35 @@
+@@ -0,0 +1,34 @@
 +.SUFFIXES: .dll .a .def
 +
 +EXE  = .exe
@@ -94,11 +92,6 @@ index 0000000..36e0b13
 +CPLIB  = .*
 +OBJ  = .o
 +
-+MAKE = make
-+AR = ar
-+ARFLAGS  = -ruv
-+
-+CAT  = cat
 +CCS  = $(WM_CC) -m$(WM_ARCH_OPTION)
 +CCSS = sh cpscotch_headers.sh mingw32
 +CCP     = $(WM_CC) -m$(WM_ARCH_OPTION)
@@ -114,13 +107,17 @@ index 0000000..36e0b13
 +LIBLDFLAGS_PT  = -shared $(LDFLAGS_P1_PT) -Wl,--output-def,$(*).def,--out-implib,$(*).a,--enable-auto-import,--strip-all
 +LDFLAGS_PT = $(LDFLAGS_P1_PT) $(LDFLAGS)
 +
-+CP = cp
-+LEX  = flex
-+LN = ln
-+MKDIR  = mkdir
-+MV = mv
-+RANLIB = ranlib
-+YACC = bison -y
++AR      = gcc
++ARFLAGS = -shared -o $(LIBLDFLAGS)
++CAT  = cat
++CP      = cp
++LEX     = flex -Pscotchyy -olex.yy.c
++LN      = ln
++MAKE = make
++MKDIR   = mkdir
++MV      = mv
++RANLIB  = echo
++YACC    = bison -pscotchyy -y -b y
 diff --git a/src/Make.inc/Makefile.inc.i686_pc_mingw32 b/src/Make.inc/Makefile.inc.i686_pc_mingw32
 index 11daf6b..7e9d747 100644
 --- a/src/Make.inc/Makefile.inc.i686_pc_mingw32
@@ -137,10 +134,10 @@ index 11daf6b..7e9d747 100644
  LIB			= .a
 diff --git a/src/Make.inc/Makefile.inc.mingw-w32 b/src/Make.inc/Makefile.inc.mingw-w32
 new file mode 100644
-index 0000000..36e0b13
+index 0000000..38e6c1c
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.mingw-w32
-@@ -0,0 +1,35 @@
+@@ -0,0 +1,34 @@
 +.SUFFIXES: .dll .a .def
 +
 +EXE  = .exe
@@ -149,11 +146,6 @@ index 0000000..36e0b13
 +CPLIB  = .*
 +OBJ  = .o
 +
-+MAKE = make
-+AR = ar
-+ARFLAGS  = -ruv
-+
-+CAT  = cat
 +CCS  = $(WM_CC) -m$(WM_ARCH_OPTION)
 +CCSS = sh cpscotch_headers.sh mingw32
 +CCP     = $(WM_CC) -m$(WM_ARCH_OPTION)
@@ -169,19 +161,23 @@ index 0000000..36e0b13
 +LIBLDFLAGS_PT  = -shared $(LDFLAGS_P1_PT) -Wl,--output-def,$(*).def,--out-implib,$(*).a,--enable-auto-import,--strip-all
 +LDFLAGS_PT = $(LDFLAGS_P1_PT) $(LDFLAGS)
 +
-+CP = cp
-+LEX  = flex
-+LN = ln
-+MKDIR  = mkdir
-+MV = mv
-+RANLIB = ranlib
-+YACC = bison -y
++AR      = gcc
++ARFLAGS = -shared -o $(LIBLDFLAGS)
++CAT  = cat
++CP      = cp
++LEX     = flex -Pscotchyy -olex.yy.c
++LN      = ln
++MAKE = make
++MKDIR   = mkdir
++MV      = mv
++RANLIB  = echo
++YACC    = bison -pscotchyy -y -b y
 diff --git a/src/Make.inc/Makefile.inc.mingw-w64 b/src/Make.inc/Makefile.inc.mingw-w64
 new file mode 100644
-index 0000000..c13da7f
+index 0000000..5afae9a
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.mingw-w64
-@@ -0,0 +1,35 @@
+@@ -0,0 +1,34 @@
 +.SUFFIXES: .dll .a .def
 +
 +EXE  = .exe
@@ -190,11 +186,6 @@ index 0000000..c13da7f
 +CPLIB  = .*
 +OBJ  = .o
 +
-+MAKE = make
-+AR = ar
-+ARFLAGS  = -ruv
-+
-+CAT  = cat
 +CCS  = $(WM_CC) -m$(WM_ARCH_OPTION)
 +CCSS = sh cpscotch_headers.sh mingw64
 +CCP     = $(WM_CC) -m$(WM_ARCH_OPTION)
@@ -210,19 +201,23 @@ index 0000000..c13da7f
 +LIBLDFLAGS_PT  = -shared $(LDFLAGS_P1_PT) -Wl,--output-def,$(*).def,--out-implib,$(*).a,--enable-auto-import,--strip-all
 +LDFLAGS_PT = $(LDFLAGS_P1_PT) $(LDFLAGS)
 +
-+CP = cp
-+LEX  = flex
-+LN = ln
-+MKDIR  = mkdir
-+MV = mv
-+RANLIB = ranlib
-+YACC = bison -y
++AR      = gcc
++ARFLAGS = -shared -o $(LIBLDFLAGS)
++CAT  = cat
++CP      = cp
++LEX     = flex -Pscotchyy -olex.yy.c
++LN      = ln
++MAKE = make
++MKDIR   = mkdir
++MV      = mv
++RANLIB  = echo
++YACC    = bison -pscotchyy -y -b y
 diff --git a/src/Make.inc/Makefile.inc.mingw32 b/src/Make.inc/Makefile.inc.mingw32
 new file mode 100644
-index 0000000..36e0b13
+index 0000000..38e6c1c
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.mingw32
-@@ -0,0 +1,35 @@
+@@ -0,0 +1,34 @@
 +.SUFFIXES: .dll .a .def
 +
 +EXE  = .exe
@@ -231,11 +226,6 @@ index 0000000..36e0b13
 +CPLIB  = .*
 +OBJ  = .o
 +
-+MAKE = make
-+AR = ar
-+ARFLAGS  = -ruv
-+
-+CAT  = cat
 +CCS  = $(WM_CC) -m$(WM_ARCH_OPTION)
 +CCSS = sh cpscotch_headers.sh mingw32
 +CCP     = $(WM_CC) -m$(WM_ARCH_OPTION)
@@ -251,19 +241,23 @@ index 0000000..36e0b13
 +LIBLDFLAGS_PT  = -shared $(LDFLAGS_P1_PT) -Wl,--output-def,$(*).def,--out-implib,$(*).a,--enable-auto-import,--strip-all
 +LDFLAGS_PT = $(LDFLAGS_P1_PT) $(LDFLAGS)
 +
-+CP = cp
-+LEX  = flex
-+LN = ln
-+MKDIR  = mkdir
-+MV = mv
-+RANLIB = ranlib
-+YACC = bison -y
++AR      = gcc
++ARFLAGS = -shared -o $(LIBLDFLAGS)
++CAT  = cat
++CP      = cp
++LEX     = flex -Pscotchyy -olex.yy.c
++LN      = ln
++MAKE = make
++MKDIR   = mkdir
++MV      = mv
++RANLIB  = echo
++YACC    = bison -pscotchyy -y -b y
 diff --git a/src/Make.inc/Makefile.inc.x86_64-w64-mingw32 b/src/Make.inc/Makefile.inc.x86_64-w64-mingw32
 new file mode 100644
-index 0000000..c13da7f
+index 0000000..5afae9a
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.x86_64-w64-mingw32
-@@ -0,0 +1,35 @@
+@@ -0,0 +1,34 @@
 +.SUFFIXES: .dll .a .def
 +
 +EXE  = .exe
@@ -272,11 +266,6 @@ index 0000000..c13da7f
 +CPLIB  = .*
 +OBJ  = .o
 +
-+MAKE = make
-+AR = ar
-+ARFLAGS  = -ruv
-+
-+CAT  = cat
 +CCS  = $(WM_CC) -m$(WM_ARCH_OPTION)
 +CCSS = sh cpscotch_headers.sh mingw64
 +CCP     = $(WM_CC) -m$(WM_ARCH_OPTION)
@@ -292,13 +281,17 @@ index 0000000..c13da7f
 +LIBLDFLAGS_PT  = -shared $(LDFLAGS_P1_PT) -Wl,--output-def,$(*).def,--out-implib,$(*).a,--enable-auto-import,--strip-all
 +LDFLAGS_PT = $(LDFLAGS_P1_PT) $(LDFLAGS)
 +
-+CP = cp
-+LEX  = flex
-+LN = ln
-+MKDIR  = mkdir
-+MV = mv
-+RANLIB = ranlib
-+YACC = bison -y
++AR      = gcc
++ARFLAGS = -shared -o $(LIBLDFLAGS)
++CAT  = cat
++CP      = cp
++LEX     = flex -Pscotchyy -olex.yy.c
++LN      = ln
++MAKE = make
++MKDIR   = mkdir
++MV      = mv
++RANLIB  = echo
++YACC    = bison -pscotchyy -y -b y
 diff --git a/src/Makefile b/src/Makefile
 index 574a3b0..c863c50 100644
 --- a/src/Makefile
