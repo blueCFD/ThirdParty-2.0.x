@@ -1,9 +1,9 @@
 diff --git a/src/Make.inc/Makefile.inc.amd64-mingw32msvc b/src/Make.inc/Makefile.inc.amd64-mingw32msvc
 new file mode 100644
-index 0000000..33c1201
+index 0000000..28619da
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.amd64-mingw32msvc
-@@ -0,0 +1,36 @@
+@@ -0,0 +1,38 @@
 +.SUFFIXES: .dll .a .def
 +
 +EXE  = .exe
@@ -29,8 +29,10 @@ index 0000000..33c1201
 +
 +AR      = $(CCS)
 +ARFLAGS = $(LIBLDFLAGS) -o
-+ARSFLAGS = -L./ -lscotcherr
-+ARPFLAGS = -L./ -lptscotcherr
++ARSFLAGS = -L./ -lscotcherr $(LDFLAGS_P1)
++ARPFLAGS = -L./ -lptscotcherr $(LDFLAGS_P1_PT)
++ARSMFLAGS = -L../libscotch/ -lscotch $(LDFLAGS_P1)
++ARPMFLAGS = -L../libscotch/ -lptscotch $(LDFLAGS_P1_PT)
 +CAT  = cat
 +CP      = cp
 +LEX     = flex -Pscotchyy -olex.yy.c
@@ -42,10 +44,10 @@ index 0000000..33c1201
 +YACC    = bison -pscotchyy -y -b y
 diff --git a/src/Make.inc/Makefile.inc.i586-mingw32msvc b/src/Make.inc/Makefile.inc.i586-mingw32msvc
 new file mode 100644
-index 0000000..5773333
+index 0000000..d5b0987
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.i586-mingw32msvc
-@@ -0,0 +1,36 @@
+@@ -0,0 +1,38 @@
 +.SUFFIXES: .dll .a .def
 +
 +EXE  = .exe
@@ -71,8 +73,10 @@ index 0000000..5773333
 +
 +AR      = $(CCS)
 +ARFLAGS = $(LIBLDFLAGS) -o
-+ARSFLAGS = -L./ -lscotcherr
-+ARPFLAGS = -L./ -lptscotcherr
++ARSFLAGS = -L./ -lscotcherr $(LDFLAGS_P1)
++ARPFLAGS = -L./ -lptscotcherr $(LDFLAGS_P1_PT)
++ARSMFLAGS = -L../libscotch/ -lscotch $(LDFLAGS_P1)
++ARPMFLAGS = -L../libscotch/ -lptscotch $(LDFLAGS_P1_PT)
 +CAT  = cat
 +CP      = cp
 +LEX     = flex -Pscotchyy -olex.yy.c
@@ -84,10 +88,10 @@ index 0000000..5773333
 +YACC    = bison -pscotchyy -y -b y
 diff --git a/src/Make.inc/Makefile.inc.i686-w64-mingw32 b/src/Make.inc/Makefile.inc.i686-w64-mingw32
 new file mode 100644
-index 0000000..5773333
+index 0000000..d5b0987
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.i686-w64-mingw32
-@@ -0,0 +1,36 @@
+@@ -0,0 +1,38 @@
 +.SUFFIXES: .dll .a .def
 +
 +EXE  = .exe
@@ -113,8 +117,10 @@ index 0000000..5773333
 +
 +AR      = $(CCS)
 +ARFLAGS = $(LIBLDFLAGS) -o
-+ARSFLAGS = -L./ -lscotcherr
-+ARPFLAGS = -L./ -lptscotcherr
++ARSFLAGS = -L./ -lscotcherr $(LDFLAGS_P1)
++ARPFLAGS = -L./ -lptscotcherr $(LDFLAGS_P1_PT)
++ARSMFLAGS = -L../libscotch/ -lscotch $(LDFLAGS_P1)
++ARPMFLAGS = -L../libscotch/ -lptscotch $(LDFLAGS_P1_PT)
 +CAT  = cat
 +CP      = cp
 +LEX     = flex -Pscotchyy -olex.yy.c
@@ -140,10 +146,10 @@ index 11daf6b..7e9d747 100644
  LIB			= .a
 diff --git a/src/Make.inc/Makefile.inc.mingw-w32 b/src/Make.inc/Makefile.inc.mingw-w32
 new file mode 100644
-index 0000000..5773333
+index 0000000..d5b0987
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.mingw-w32
-@@ -0,0 +1,36 @@
+@@ -0,0 +1,38 @@
 +.SUFFIXES: .dll .a .def
 +
 +EXE  = .exe
@@ -169,8 +175,10 @@ index 0000000..5773333
 +
 +AR      = $(CCS)
 +ARFLAGS = $(LIBLDFLAGS) -o
-+ARSFLAGS = -L./ -lscotcherr
-+ARPFLAGS = -L./ -lptscotcherr
++ARSFLAGS = -L./ -lscotcherr $(LDFLAGS_P1)
++ARPFLAGS = -L./ -lptscotcherr $(LDFLAGS_P1_PT)
++ARSMFLAGS = -L../libscotch/ -lscotch $(LDFLAGS_P1)
++ARPMFLAGS = -L../libscotch/ -lptscotch $(LDFLAGS_P1_PT)
 +CAT  = cat
 +CP      = cp
 +LEX     = flex -Pscotchyy -olex.yy.c
@@ -182,10 +190,10 @@ index 0000000..5773333
 +YACC    = bison -pscotchyy -y -b y
 diff --git a/src/Make.inc/Makefile.inc.mingw-w64 b/src/Make.inc/Makefile.inc.mingw-w64
 new file mode 100644
-index 0000000..33c1201
+index 0000000..28619da
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.mingw-w64
-@@ -0,0 +1,36 @@
+@@ -0,0 +1,38 @@
 +.SUFFIXES: .dll .a .def
 +
 +EXE  = .exe
@@ -211,8 +219,10 @@ index 0000000..33c1201
 +
 +AR      = $(CCS)
 +ARFLAGS = $(LIBLDFLAGS) -o
-+ARSFLAGS = -L./ -lscotcherr
-+ARPFLAGS = -L./ -lptscotcherr
++ARSFLAGS = -L./ -lscotcherr $(LDFLAGS_P1)
++ARPFLAGS = -L./ -lptscotcherr $(LDFLAGS_P1_PT)
++ARSMFLAGS = -L../libscotch/ -lscotch $(LDFLAGS_P1)
++ARPMFLAGS = -L../libscotch/ -lptscotch $(LDFLAGS_P1_PT)
 +CAT  = cat
 +CP      = cp
 +LEX     = flex -Pscotchyy -olex.yy.c
@@ -224,10 +234,10 @@ index 0000000..33c1201
 +YACC    = bison -pscotchyy -y -b y
 diff --git a/src/Make.inc/Makefile.inc.mingw32 b/src/Make.inc/Makefile.inc.mingw32
 new file mode 100644
-index 0000000..5773333
+index 0000000..d5b0987
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.mingw32
-@@ -0,0 +1,36 @@
+@@ -0,0 +1,38 @@
 +.SUFFIXES: .dll .a .def
 +
 +EXE  = .exe
@@ -253,8 +263,10 @@ index 0000000..5773333
 +
 +AR      = $(CCS)
 +ARFLAGS = $(LIBLDFLAGS) -o
-+ARSFLAGS = -L./ -lscotcherr
-+ARPFLAGS = -L./ -lptscotcherr
++ARSFLAGS = -L./ -lscotcherr $(LDFLAGS_P1)
++ARPFLAGS = -L./ -lptscotcherr $(LDFLAGS_P1_PT)
++ARSMFLAGS = -L../libscotch/ -lscotch $(LDFLAGS_P1)
++ARPMFLAGS = -L../libscotch/ -lptscotch $(LDFLAGS_P1_PT)
 +CAT  = cat
 +CP      = cp
 +LEX     = flex -Pscotchyy -olex.yy.c
@@ -266,10 +278,10 @@ index 0000000..5773333
 +YACC    = bison -pscotchyy -y -b y
 diff --git a/src/Make.inc/Makefile.inc.x86_64-w64-mingw32 b/src/Make.inc/Makefile.inc.x86_64-w64-mingw32
 new file mode 100644
-index 0000000..33c1201
+index 0000000..28619da
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.x86_64-w64-mingw32
-@@ -0,0 +1,36 @@
+@@ -0,0 +1,38 @@
 +.SUFFIXES: .dll .a .def
 +
 +EXE  = .exe
@@ -295,8 +307,10 @@ index 0000000..33c1201
 +
 +AR      = $(CCS)
 +ARFLAGS = $(LIBLDFLAGS) -o
-+ARSFLAGS = -L./ -lscotcherr
-+ARPFLAGS = -L./ -lptscotcherr
++ARSFLAGS = -L./ -lscotcherr $(LDFLAGS_P1)
++ARPFLAGS = -L./ -lptscotcherr $(LDFLAGS_P1_PT)
++ARSMFLAGS = -L../libscotch/ -lscotch $(LDFLAGS_P1)
++ARPMFLAGS = -L../libscotch/ -lptscotch $(LDFLAGS_P1_PT)
 +CAT  = cat
 +CP      = cp
 +LEX     = flex -Pscotchyy -olex.yy.c
@@ -1287,7 +1301,7 @@ index 0000000..5bb3f80
 +        PARAMETER (SCOTCH_ORDERDIM         = 12)
 +        PARAMETER (SCOTCH_STRATDIM         = 1)
 diff --git a/src/libscotchmetis/Makefile b/src/libscotchmetis/Makefile
-index d81d02c..0f353fc 100644
+index d81d02c..024e813 100644
 --- a/src/libscotchmetis/Makefile
 +++ b/src/libscotchmetis/Makefile
 @@ -40,11 +40,15 @@ libdir		= ../../lib
@@ -1326,6 +1340,21 @@ index d81d02c..0f353fc 100644
  
  realclean			:	clean
  
+@@ -129,12 +133,12 @@ libptscotchparmetis$(LIB)	:	parmetis_dgraph_order$(OBJ)		\
+ 					parmetis_dgraph_order_f$(OBJ)		\
+ 					parmetis_dgraph_part$(OBJ)		\
+ 					parmetis_dgraph_part_f$(OBJ)
+-					$(AR) $(ARFLAGS) $(@) $(^)
++					$(AR) $(ARFLAGS) $(@) $(^) $(ARPMFLAGS)
+ 					-$(RANLIB) $(@)
+ 
+ libscotchmetis$(LIB)		:	metis_graph_order$(OBJ)			\
+ 					metis_graph_order_f$(OBJ)		\
+ 					metis_graph_part$(OBJ)			\
+ 					metis_graph_part_f$(OBJ)
+-					$(AR) $(ARFLAGS) $(@) $(^)
++					$(AR) $(ARFLAGS) $(@) $(^) $(ARSMFLAGS)
+ 					-$(RANLIB) $(@)
 diff --git a/src/scotch/Makefile b/src/scotch/Makefile
 index 6179afd..ef50d23 100644
 --- a/src/scotch/Makefile
