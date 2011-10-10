@@ -1,9 +1,9 @@
 diff --git a/src/Make.inc/Makefile.inc.amd64-mingw32msvc b/src/Make.inc/Makefile.inc.amd64-mingw32msvc
 new file mode 100644
-index 0000000..5afae9a
+index 0000000..33c1201
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.amd64-mingw32msvc
-@@ -0,0 +1,34 @@
+@@ -0,0 +1,36 @@
 +.SUFFIXES: .dll .a .def
 +
 +EXE  = .exe
@@ -19,7 +19,7 @@ index 0000000..5afae9a
 +CFLAGS = -O3 -Wall -Dlinux -DCOMMON_WINDOWS -DNDEBUG -DWIN64 -DLITTLE_ENDIAN -Drestrict=__restrict -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)' -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 -I$(MPI_ARCH_PATH)/include
 +# -DCOMMON_TIMING_OLD
 +
-+LDFLAGS_P1 = -lz -lm -L$($FOAM_LIBBIN)/
++LDFLAGS_P1 = -L$(FOAM_LIBBIN)/ -lz -lm
 +LIBLDFLAGS = -shared $(LDFLAGS_P1) -Wl,--output-def,$(*).def,--out-implib,$(*).a,--enable-auto-import,--strip-all
 +LDFLAGS  = $(LDFLAGS_P1) -Wl,--enable-auto-import,--force-exe-suffix,--strip-all
 +
@@ -27,8 +27,10 @@ index 0000000..5afae9a
 +LIBLDFLAGS_PT  = -shared $(LDFLAGS_P1_PT) -Wl,--output-def,$(*).def,--out-implib,$(*).a,--enable-auto-import,--strip-all
 +LDFLAGS_PT = $(LDFLAGS_P1_PT) $(LDFLAGS)
 +
-+AR      = gcc
-+ARFLAGS = -shared -o $(LIBLDFLAGS)
++AR      = $(CCS)
++ARFLAGS = $(LIBLDFLAGS) -o
++ARSFLAGS = -L./ -lscotcherr
++ARPFLAGS = -L./ -lptscotcherr
 +CAT  = cat
 +CP      = cp
 +LEX     = flex -Pscotchyy -olex.yy.c
@@ -40,10 +42,10 @@ index 0000000..5afae9a
 +YACC    = bison -pscotchyy -y -b y
 diff --git a/src/Make.inc/Makefile.inc.i586-mingw32msvc b/src/Make.inc/Makefile.inc.i586-mingw32msvc
 new file mode 100644
-index 0000000..38e6c1c
+index 0000000..5773333
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.i586-mingw32msvc
-@@ -0,0 +1,34 @@
+@@ -0,0 +1,36 @@
 +.SUFFIXES: .dll .a .def
 +
 +EXE  = .exe
@@ -59,7 +61,7 @@ index 0000000..38e6c1c
 +CFLAGS = -O3 -Wall -Dlinux -DCOMMON_WINDOWS -DNDEBUG -DWIN32 -DLITTLE_ENDIAN -Drestrict=__restrict -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)' -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 -I$(MPI_ARCH_PATH)/include
 +# -DCOMMON_TIMING_OLD
 +
-+LDFLAGS_P1 = -lz -lm -L$($FOAM_LIBBIN)/
++LDFLAGS_P1 = -L$(FOAM_LIBBIN)/ -lz -lm
 +LIBLDFLAGS = -shared $(LDFLAGS_P1) -Wl,--output-def,$(*).def,--out-implib,$(*).a,--enable-auto-import,--strip-all
 +LDFLAGS  = $(LDFLAGS_P1) -Wl,--enable-auto-import,--force-exe-suffix,--strip-all
 +
@@ -67,8 +69,10 @@ index 0000000..38e6c1c
 +LIBLDFLAGS_PT  = -shared $(LDFLAGS_P1_PT) -Wl,--output-def,$(*).def,--out-implib,$(*).a,--enable-auto-import,--strip-all
 +LDFLAGS_PT = $(LDFLAGS_P1_PT) $(LDFLAGS)
 +
-+AR      = gcc
-+ARFLAGS = -shared -o $(LIBLDFLAGS)
++AR      = $(CCS)
++ARFLAGS = $(LIBLDFLAGS) -o
++ARSFLAGS = -L./ -lscotcherr
++ARPFLAGS = -L./ -lptscotcherr
 +CAT  = cat
 +CP      = cp
 +LEX     = flex -Pscotchyy -olex.yy.c
@@ -80,10 +84,10 @@ index 0000000..38e6c1c
 +YACC    = bison -pscotchyy -y -b y
 diff --git a/src/Make.inc/Makefile.inc.i686-w64-mingw32 b/src/Make.inc/Makefile.inc.i686-w64-mingw32
 new file mode 100644
-index 0000000..38e6c1c
+index 0000000..5773333
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.i686-w64-mingw32
-@@ -0,0 +1,34 @@
+@@ -0,0 +1,36 @@
 +.SUFFIXES: .dll .a .def
 +
 +EXE  = .exe
@@ -99,7 +103,7 @@ index 0000000..38e6c1c
 +CFLAGS = -O3 -Wall -Dlinux -DCOMMON_WINDOWS -DNDEBUG -DWIN32 -DLITTLE_ENDIAN -Drestrict=__restrict -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)' -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 -I$(MPI_ARCH_PATH)/include
 +# -DCOMMON_TIMING_OLD
 +
-+LDFLAGS_P1 = -lz -lm -L$($FOAM_LIBBIN)/
++LDFLAGS_P1 = -L$(FOAM_LIBBIN)/ -lz -lm
 +LIBLDFLAGS = -shared $(LDFLAGS_P1) -Wl,--output-def,$(*).def,--out-implib,$(*).a,--enable-auto-import,--strip-all
 +LDFLAGS  = $(LDFLAGS_P1) -Wl,--enable-auto-import,--force-exe-suffix,--strip-all
 +
@@ -107,8 +111,10 @@ index 0000000..38e6c1c
 +LIBLDFLAGS_PT  = -shared $(LDFLAGS_P1_PT) -Wl,--output-def,$(*).def,--out-implib,$(*).a,--enable-auto-import,--strip-all
 +LDFLAGS_PT = $(LDFLAGS_P1_PT) $(LDFLAGS)
 +
-+AR      = gcc
-+ARFLAGS = -shared -o $(LIBLDFLAGS)
++AR      = $(CCS)
++ARFLAGS = $(LIBLDFLAGS) -o
++ARSFLAGS = -L./ -lscotcherr
++ARPFLAGS = -L./ -lptscotcherr
 +CAT  = cat
 +CP      = cp
 +LEX     = flex -Pscotchyy -olex.yy.c
@@ -134,10 +140,10 @@ index 11daf6b..7e9d747 100644
  LIB			= .a
 diff --git a/src/Make.inc/Makefile.inc.mingw-w32 b/src/Make.inc/Makefile.inc.mingw-w32
 new file mode 100644
-index 0000000..38e6c1c
+index 0000000..5773333
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.mingw-w32
-@@ -0,0 +1,34 @@
+@@ -0,0 +1,36 @@
 +.SUFFIXES: .dll .a .def
 +
 +EXE  = .exe
@@ -153,7 +159,7 @@ index 0000000..38e6c1c
 +CFLAGS = -O3 -Wall -Dlinux -DCOMMON_WINDOWS -DNDEBUG -DWIN32 -DLITTLE_ENDIAN -Drestrict=__restrict -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)' -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 -I$(MPI_ARCH_PATH)/include
 +# -DCOMMON_TIMING_OLD
 +
-+LDFLAGS_P1 = -lz -lm -L$($FOAM_LIBBIN)/
++LDFLAGS_P1 = -L$(FOAM_LIBBIN)/ -lz -lm
 +LIBLDFLAGS = -shared $(LDFLAGS_P1) -Wl,--output-def,$(*).def,--out-implib,$(*).a,--enable-auto-import,--strip-all
 +LDFLAGS  = $(LDFLAGS_P1) -Wl,--enable-auto-import,--force-exe-suffix,--strip-all
 +
@@ -161,8 +167,10 @@ index 0000000..38e6c1c
 +LIBLDFLAGS_PT  = -shared $(LDFLAGS_P1_PT) -Wl,--output-def,$(*).def,--out-implib,$(*).a,--enable-auto-import,--strip-all
 +LDFLAGS_PT = $(LDFLAGS_P1_PT) $(LDFLAGS)
 +
-+AR      = gcc
-+ARFLAGS = -shared -o $(LIBLDFLAGS)
++AR      = $(CCS)
++ARFLAGS = $(LIBLDFLAGS) -o
++ARSFLAGS = -L./ -lscotcherr
++ARPFLAGS = -L./ -lptscotcherr
 +CAT  = cat
 +CP      = cp
 +LEX     = flex -Pscotchyy -olex.yy.c
@@ -174,10 +182,10 @@ index 0000000..38e6c1c
 +YACC    = bison -pscotchyy -y -b y
 diff --git a/src/Make.inc/Makefile.inc.mingw-w64 b/src/Make.inc/Makefile.inc.mingw-w64
 new file mode 100644
-index 0000000..5afae9a
+index 0000000..33c1201
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.mingw-w64
-@@ -0,0 +1,34 @@
+@@ -0,0 +1,36 @@
 +.SUFFIXES: .dll .a .def
 +
 +EXE  = .exe
@@ -193,7 +201,7 @@ index 0000000..5afae9a
 +CFLAGS = -O3 -Wall -Dlinux -DCOMMON_WINDOWS -DNDEBUG -DWIN64 -DLITTLE_ENDIAN -Drestrict=__restrict -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)' -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 -I$(MPI_ARCH_PATH)/include
 +# -DCOMMON_TIMING_OLD
 +
-+LDFLAGS_P1 = -lz -lm -L$($FOAM_LIBBIN)/
++LDFLAGS_P1 = -L$(FOAM_LIBBIN)/ -lz -lm
 +LIBLDFLAGS = -shared $(LDFLAGS_P1) -Wl,--output-def,$(*).def,--out-implib,$(*).a,--enable-auto-import,--strip-all
 +LDFLAGS  = $(LDFLAGS_P1) -Wl,--enable-auto-import,--force-exe-suffix,--strip-all
 +
@@ -201,8 +209,10 @@ index 0000000..5afae9a
 +LIBLDFLAGS_PT  = -shared $(LDFLAGS_P1_PT) -Wl,--output-def,$(*).def,--out-implib,$(*).a,--enable-auto-import,--strip-all
 +LDFLAGS_PT = $(LDFLAGS_P1_PT) $(LDFLAGS)
 +
-+AR      = gcc
-+ARFLAGS = -shared -o $(LIBLDFLAGS)
++AR      = $(CCS)
++ARFLAGS = $(LIBLDFLAGS) -o
++ARSFLAGS = -L./ -lscotcherr
++ARPFLAGS = -L./ -lptscotcherr
 +CAT  = cat
 +CP      = cp
 +LEX     = flex -Pscotchyy -olex.yy.c
@@ -214,10 +224,10 @@ index 0000000..5afae9a
 +YACC    = bison -pscotchyy -y -b y
 diff --git a/src/Make.inc/Makefile.inc.mingw32 b/src/Make.inc/Makefile.inc.mingw32
 new file mode 100644
-index 0000000..38e6c1c
+index 0000000..5773333
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.mingw32
-@@ -0,0 +1,34 @@
+@@ -0,0 +1,36 @@
 +.SUFFIXES: .dll .a .def
 +
 +EXE  = .exe
@@ -233,7 +243,7 @@ index 0000000..38e6c1c
 +CFLAGS = -O3 -Wall -Dlinux -DCOMMON_WINDOWS -DNDEBUG -DWIN32 -DLITTLE_ENDIAN -Drestrict=__restrict -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)' -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 -I$(MPI_ARCH_PATH)/include
 +# -DCOMMON_TIMING_OLD
 +
-+LDFLAGS_P1 = -lz -lm -L$($FOAM_LIBBIN)/
++LDFLAGS_P1 = -L$(FOAM_LIBBIN)/ -lz -lm
 +LIBLDFLAGS = -shared $(LDFLAGS_P1) -Wl,--output-def,$(*).def,--out-implib,$(*).a,--enable-auto-import,--strip-all
 +LDFLAGS  = $(LDFLAGS_P1) -Wl,--enable-auto-import,--force-exe-suffix,--strip-all
 +
@@ -241,8 +251,10 @@ index 0000000..38e6c1c
 +LIBLDFLAGS_PT  = -shared $(LDFLAGS_P1_PT) -Wl,--output-def,$(*).def,--out-implib,$(*).a,--enable-auto-import,--strip-all
 +LDFLAGS_PT = $(LDFLAGS_P1_PT) $(LDFLAGS)
 +
-+AR      = gcc
-+ARFLAGS = -shared -o $(LIBLDFLAGS)
++AR      = $(CCS)
++ARFLAGS = $(LIBLDFLAGS) -o
++ARSFLAGS = -L./ -lscotcherr
++ARPFLAGS = -L./ -lptscotcherr
 +CAT  = cat
 +CP      = cp
 +LEX     = flex -Pscotchyy -olex.yy.c
@@ -254,10 +266,10 @@ index 0000000..38e6c1c
 +YACC    = bison -pscotchyy -y -b y
 diff --git a/src/Make.inc/Makefile.inc.x86_64-w64-mingw32 b/src/Make.inc/Makefile.inc.x86_64-w64-mingw32
 new file mode 100644
-index 0000000..5afae9a
+index 0000000..33c1201
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.x86_64-w64-mingw32
-@@ -0,0 +1,34 @@
+@@ -0,0 +1,36 @@
 +.SUFFIXES: .dll .a .def
 +
 +EXE  = .exe
@@ -273,7 +285,7 @@ index 0000000..5afae9a
 +CFLAGS = -O3 -Wall -Dlinux -DCOMMON_WINDOWS -DNDEBUG -DWIN64 -DLITTLE_ENDIAN -Drestrict=__restrict -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)' -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 -I$(MPI_ARCH_PATH)/include
 +# -DCOMMON_TIMING_OLD
 +
-+LDFLAGS_P1 = -lz -lm -L$($FOAM_LIBBIN)/
++LDFLAGS_P1 = -L$(FOAM_LIBBIN)/ -lz -lm
 +LIBLDFLAGS = -shared $(LDFLAGS_P1) -Wl,--output-def,$(*).def,--out-implib,$(*).a,--enable-auto-import,--strip-all
 +LDFLAGS  = $(LDFLAGS_P1) -Wl,--enable-auto-import,--force-exe-suffix,--strip-all
 +
@@ -281,8 +293,10 @@ index 0000000..5afae9a
 +LIBLDFLAGS_PT  = -shared $(LDFLAGS_P1_PT) -Wl,--output-def,$(*).def,--out-implib,$(*).a,--enable-auto-import,--strip-all
 +LDFLAGS_PT = $(LDFLAGS_P1_PT) $(LDFLAGS)
 +
-+AR      = gcc
-+ARFLAGS = -shared -o $(LIBLDFLAGS)
++AR      = $(CCS)
++ARFLAGS = $(LIBLDFLAGS) -o
++ARSFLAGS = -L./ -lscotcherr
++ARPFLAGS = -L./ -lptscotcherr
 +CAT  = cat
 +CP      = cp
 +LEX     = flex -Pscotchyy -olex.yy.c
@@ -307,7 +321,7 @@ index 574a3b0..c863c50 100644
  					-$(MKDIR) ../bin
  
 diff --git a/src/libscotch/Makefile b/src/libscotch/Makefile
-index d9d4bec..c8c6ed8 100644
+index d9d4bec..746fdb9 100644
 --- a/src/libscotch/Makefile
 +++ b/src/libscotch/Makefile
 @@ -39,6 +39,11 @@ libdir		= ../../lib
@@ -337,7 +351,8 @@ index d9d4bec..c8c6ed8 100644
 +					libscotch$(LIB)
  
  ptscotch			:	clean
- 					$(MAKE) CFLAGS="$(CFLAGS) -DSCOTCH_PTSCOTCH" CC="$(CCP)"	\
+-					$(MAKE) CFLAGS="$(CFLAGS) -DSCOTCH_PTSCOTCH" CC="$(CCP)"	\
++					$(MAKE) CFLAGS="$(CFLAGS) -DSCOTCH_PTSCOTCH" CC="$(CCP)" CCD="$(CCSS)"	\
  					scotch.h							\
  					scotchf.h							\
 -					libptscotch$(LIB)						\
@@ -373,6 +388,24 @@ index d9d4bec..c8c6ed8 100644
  
  scotch.h			:	dummysizes$(EXE)			\
  					library.h
+@@ -2526,7 +2531,7 @@ scotchf.h			:	dummysizes$(EXE) 			\
+ 					./dummysizes$(EXE) libraryf.h scotchf.h
+ 
+ libptscotch$(LIB)		:	$(LIBPTSCOTCHDEPS) $(LIBSCOTCHDEPS)
+-					$(AR) $(ARFLAGS) $(@) $(?)
++					$(AR) $(ARFLAGS) $(@) $(?) $(ARPFLAGS)
+ 					-$(RANLIB) $(@)
+ 
+ libscotch$(LIB)			:	$(LIBSCOTCHDEPS)
+@@ -2542,7 +2547,7 @@ libptscotcherrexit$(LIB)	:	library_error_exit$(OBJ)
+ 					-$(RANLIB) $(@)
+ 
+ libscotcherr$(LIB)		:	library_error$(OBJ)
+-					$(AR) $(ARFLAGS) $(@) $(?)
++					$(AR) $(ARFLAGS) $(@) $(?) $(ARSFLAGS)
+ 					-$(RANLIB) $(@)
+ 
+ libscotcherrexit$(LIB)		:	library_error_exit$(OBJ)
 diff --git a/src/libscotch/cpscotch_headers.sh b/src/libscotch/cpscotch_headers.sh
 new file mode 100644
 index 0000000..591a532
