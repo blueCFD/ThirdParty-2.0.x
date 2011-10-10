@@ -321,19 +321,29 @@ index 0000000..28619da
 +RANLIB  = echo
 +YACC    = bison -pscotchyy -y -b y
 diff --git a/src/Makefile b/src/Makefile
-index 574a3b0..c863c50 100644
+index 574a3b0..779992f 100644
 --- a/src/Makefile
 +++ b/src/Makefile
-@@ -62,6 +62,9 @@ libdir		?= $(prefix)/lib
+@@ -62,6 +62,10 @@ libdir		?= $(prefix)/lib
  datarootdir	?= $(prefix)/share
  mandir		?= $(datarootdir)/man
  
-+LIBLDFLAGS_PT  ?= $(LIBLDFLAGS)
-+LDFLAGS_PT ?= $(LDFLAGS)
++LIBLDFLAGS_PT	?= $(LIBLDFLAGS)
++LDFLAGS_PT	?= $(LDFLAGS)
++INSTLIB		?= $(LIB)
 +
  ../bin				:
  					-$(MKDIR) ../bin
  
+@@ -102,7 +106,7 @@ ptscotch			:	required
+ install				:	required	$(bindir)	$(includedir)	$(libdir)	$(mandir)/man1
+ 					-$(CP) -f ../bin/[agm]*$(EXE) $(bindir)
+ 					-$(CP) -f ../include/*scotch*.h $(includedir)
+-					-$(CP) -f ../lib/*scotch*$(LIB) $(libdir)
++					-$(CP) -f ../lib/*scotch*$(CPLIB) $(libdir)
+ 					-$(CP) -Rf ../man/* $(mandir)
+ 
+ clean				:	required
 diff --git a/src/libscotch/Makefile b/src/libscotch/Makefile
 index d9d4bec..e4cd8c4 100644
 --- a/src/libscotch/Makefile
