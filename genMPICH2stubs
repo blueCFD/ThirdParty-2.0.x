@@ -119,6 +119,7 @@ function create_gcccompatible_library
   echo -e "\033[1m creating mpi.a \033[0m"
   WM_DLLTOOL=`echo $WM_CC | sed s/gcc/dlltool/`
   cd $BUILDDIR/lib
+  pexports -o mpich2mpi.dll > mpich2.def
   $WM_DLLTOOL -d ../mpich2.def -l libmpi.a -D MPICH2MPI.DLL
 }
 
