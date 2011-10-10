@@ -334,7 +334,7 @@ index 574a3b0..c863c50 100644
  					-$(MKDIR) ../bin
  
 diff --git a/src/libscotch/Makefile b/src/libscotch/Makefile
-index d9d4bec..bfec1b2 100644
+index d9d4bec..c8c6ed8 100644
 --- a/src/libscotch/Makefile
 +++ b/src/libscotch/Makefile
 @@ -39,6 +39,11 @@ libdir		= ../../lib
@@ -354,7 +354,7 @@ index d9d4bec..bfec1b2 100644
  
  scotch				:	clean
 -					$(MAKE) CC="$(CCS)" CCD="$(CCS)"	\
-+					$(MAKE) CC="$(CCS)" CCD="$(CCCS)"	\
++					$(MAKE) CC="$(CCS)" CCD="$(CCSS)"	\
  					scotch.h				\
  					scotchf.h				\
 -					libscotch$(LIB)				\
@@ -391,6 +391,15 @@ index d9d4bec..bfec1b2 100644
  
  realclean			:	clean
  
+@@ -2515,7 +2520,7 @@ dummysizes$(EXE)		:	dummysizes.c				\
+ 					mapping.h				\
+ 					order.h					\
+ 					parser.h
+-			 		$(CCD) $(CFLAGS) -DSCOTCH_VERSION=$(VERSION) -DSCOTCH_RELEASE=$(RELEASE) -DSCOTCH_PATCHLEVEL=$(PATCHLEVEL) $(<) -o $(@) $(LDFLAGS)
++					$(CCD) $(CFLAGS) -DSCOTCH_VERSION=$(VERSION) -DSCOTCH_RELEASE=$(RELEASE) -DSCOTCH_PATCHLEVEL=$(PATCHLEVEL) $(<) -o $(@) $(LDFLAGS)
+ 
+ scotch.h			:	dummysizes$(EXE)			\
+ 					library.h
 diff --git a/src/libscotch/cpscotch_headers.sh b/src/libscotch/cpscotch_headers.sh
 new file mode 100644
 index 0000000..591a532
