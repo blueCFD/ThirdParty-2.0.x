@@ -399,12 +399,12 @@ index 0000000..591a532
 +echo "cp \$2_${mingw_version} \$2" >> dummysizes.exe
 +echo "fi" >> dummysizes.exe
 diff --git a/src/libscotch/scotch.h_mingw32 b/src/libscotch/scotch.h_mingw32
-new file mode 100644
-index 0000000..584fa8e
+new file mode 100755
+index 0000000..7fc195f
 --- /dev/null
 +++ b/src/libscotch/scotch.h_mingw32
-@@ -0,0 +1,288 @@
-+/* Copyright 2004,2007-2009 ENSEIRB, INRIA & CNRS
+@@ -0,0 +1,327 @@
++/* Copyright 2004,2007-2010 ENSEIRB, INRIA & CNRS
 +**
 +** This file is part of the Scotch software package for static mapping,
 +** graph partitioning and sparse matrix ordering.
@@ -437,13 +437,13 @@ index 0000000..584fa8e
 +*/
 +/************************************************************/
 +/**                                                        **/
-+/**   NAME       : scotch.h                                **/
++/**   NAME       : ptscotch.h                              **/
 +/**                                                        **/
 +/**   AUTHOR     : Francois PELLEGRINI                     **/
 +/**                                                        **/
 +/**   FUNCTION   : Declaration file for the LibScotch      **/
 +/**                static mapping and sparse matrix block  **/
-+/**                ordering sequential library.            **/
++/**                ordering library.                       **/
 +/**                                                        **/
 +/**   DATES      : # Version 3.2  : from : 07 sep 1996     **/
 +/**                                 to     22 aug 1998     **/
@@ -456,7 +456,7 @@ index 0000000..584fa8e
 +/**                # Version 5.0  : from : 26 apr 2006     **/
 +/**                                 to   : 20 feb 2008     **/
 +/**                # Version 5.1  : from : 30 nov 2007     **/
-+/**                                 to   : 06 jun 2009     **/
++/**                                 to   : 17 nov 2010     **/
 +/**                                                        **/
 +/************************************************************/
 +
@@ -464,21 +464,39 @@ index 0000000..584fa8e
 +**  The type and structure definitions.
 +*/
 +
++/*+ Version flags. +*/
++
++#define SCOTCH_VERSION 5
++#define SCOTCH_RELEASE 1
++#define SCOTCH_PATCHLEVEL 10
++
 +/*+ Parallel processing flag. +*/
 +
 +#ifndef SCOTCH_PTSCOTCH
-+#define SCOTCH_PTSCOTCH
++#define SCOTCH_SEQSCOTCH
 +#endif /* SCOTCH_PTSCOTCH */
 +
 +/*+ Integer type. +*/
 +
++typedef int SCOTCH_Idx;
++
 +typedef int SCOTCH_Num;
 +
 +#define SCOTCH_NUMMAX               ((int) (((unsigned int) 1 << ((sizeof (int) << 3) - 1)) - 1))
++#define SCOTCH_NUMSTRING            "%d"
 +
-+/*+ Opaque objects. The dummy sizes of these objects,
-+computed at compile-time by program "dummysizes",
-+are given as double values for proper padding +*/
++/*+ Strategy string parametrization values +*/
++
++#define SCOTCH_STRATQUALITY         1
++#define SCOTCH_STRATSPEED           2
++#define SCOTCH_STRATBALANCE         4
++#define SCOTCH_STRATSAFETY          8
++#define SCOTCH_STRATSCALABILITY     16
++
++/*+ Opaque objects. The dummy sizes of these
++objects, computed at compile-time by program
++"dummysizes", are given as double values for
++proper padding                               +*/
 +
 +typedef struct {
 +  double                    dummy[5];
@@ -486,7 +504,7 @@ index 0000000..584fa8e
 +
 +#ifdef SCOTCH_PTSCOTCH
 +typedef struct {
-+  double                    dummy[19];
++  double                    dummy[1];
 +} SCOTCH_Dgraph;
 +
 +typedef struct {
@@ -494,11 +512,11 @@ index 0000000..584fa8e
 +} SCOTCH_DgraphHaloReq;
 +
 +typedef struct {
-+  double                    dummy[7];
++  double                    dummy[1];
 +} SCOTCH_Dmapping;
 +
 +typedef struct {
-+  double                    dummy[4];
++  double                    dummy[1];
 +} SCOTCH_Dordering;
 +#endif /* SCOTCH_PTSCOTCH */
 +
@@ -507,7 +525,7 @@ index 0000000..584fa8e
 +} SCOTCH_Geom;
 +
 +typedef struct {
-+  double                    dummy[9];
++  double                    dummy[8];
 +} SCOTCH_Graph;
 +
 +typedef struct {
@@ -534,10 +552,7 @@ index 0000000..584fa8e
 +extern "C" {
 +#endif /* __cplusplus */
 +
-+void                        SCOTCH_errorProg    (const char * const);
-+void                        SCOTCH_errorPrint   (const char * const, ...);
-+void                        SCOTCH_errorPrintW  (const char * const, ...);
-+
++SCOTCH_Arch *               SCOTCH_archAlloc    (void);
 +int                         SCOTCH_archInit     (SCOTCH_Arch * const);
 +void                        SCOTCH_archExit     (SCOTCH_Arch * const);
 +int                         SCOTCH_archLoad     (SCOTCH_Arch * const, FILE * const);
@@ -550,13 +565,14 @@ index 0000000..584fa8e
 +int                         SCOTCH_archHcub     (SCOTCH_Arch * const, const SCOTCH_Num);
 +int                         SCOTCH_archMesh2    (SCOTCH_Arch * const, const SCOTCH_Num, const SCOTCH_Num);
 +int                         SCOTCH_archMesh3    (SCOTCH_Arch * const, const SCOTCH_Num, const SCOTCH_Num, const SCOTCH_Num);
-+int                         SCOTCH_archTleaf    (SCOTCH_Arch * const, const SCOTCH_Num, const SCOTCH_Num, const SCOTCH_Num);
++int                         SCOTCH_archTleaf    (SCOTCH_Arch * const, const SCOTCH_Num, const SCOTCH_Num * const, const SCOTCH_Num * const);
 +int                         SCOTCH_archTorus2   (SCOTCH_Arch * const, const SCOTCH_Num, const SCOTCH_Num);
 +int                         SCOTCH_archTorus3   (SCOTCH_Arch * const, const SCOTCH_Num, const SCOTCH_Num, const SCOTCH_Num);
 +int                         SCOTCH_archVcmplt   (SCOTCH_Arch * const);
 +int                         SCOTCH_archVhcub    (SCOTCH_Arch * const);
 +
 +#ifdef SCOTCH_PTSCOTCH
++SCOTCH_Dgraph *             SCOTCH_dgraphAlloc  (void);
 +int                         SCOTCH_dgraphInit   (SCOTCH_Dgraph * const, MPI_Comm);
 +void                        SCOTCH_dgraphExit   (SCOTCH_Dgraph * const);
 +void                        SCOTCH_dgraphFree   (SCOTCH_Dgraph * const);
@@ -564,7 +580,7 @@ index 0000000..584fa8e
 +int                         SCOTCH_dgraphSave   (SCOTCH_Dgraph * const, FILE * const);
 +int                         SCOTCH_dgraphCheck  (const SCOTCH_Dgraph * const);
 +int                         SCOTCH_dgraphBuild  (SCOTCH_Dgraph * const, const SCOTCH_Num, const SCOTCH_Num, const SCOTCH_Num, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, const SCOTCH_Num, const SCOTCH_Num, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
-+int                         SCOTCH_dgraphBuildGrid3D (SCOTCH_Dgraph * const, const SCOTCH_Num, const SCOTCH_Num, const SCOTCH_Num, const SCOTCH_Num);
++int                         SCOTCH_dgraphBuildGrid3D (SCOTCH_Dgraph * const, const SCOTCH_Num, const SCOTCH_Num, const SCOTCH_Num, const SCOTCH_Num, const SCOTCH_Num, const int);
 +int                         SCOTCH_dgraphGather (const SCOTCH_Dgraph * const, SCOTCH_Graph * const);
 +int                         SCOTCH_dgraphScatter (SCOTCH_Dgraph * const, const SCOTCH_Graph * const);
 +void                        SCOTCH_dgraphSize   (const SCOTCH_Dgraph * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
@@ -573,14 +589,15 @@ index 0000000..584fa8e
 +int                         SCOTCH_dgraphGhst   (SCOTCH_Dgraph * const);
 +int                         SCOTCH_dgraphHalo   (SCOTCH_Dgraph * const, void * const, const MPI_Datatype);
 +int                         SCOTCH_dgraphHaloAsync (SCOTCH_Dgraph * const, void * const, const MPI_Datatype, SCOTCH_DgraphHaloReq * const);
++SCOTCH_DgraphHaloReq *      SCOTCH_dgraphHaloReqAlloc (void);
 +int                         SCOTCH_dgraphHaloWait (SCOTCH_DgraphHaloReq * const);
 +int                         SCOTCH_dgraphMapInit (const SCOTCH_Dgraph * const, SCOTCH_Dmapping * const, const SCOTCH_Arch * const, SCOTCH_Num * const);
 +void                        SCOTCH_dgraphMapExit (const SCOTCH_Dgraph * const, SCOTCH_Dmapping * const);
 +int                         SCOTCH_dgraphMapSave (const SCOTCH_Dgraph * const, const SCOTCH_Dmapping * const, FILE * const);
 +int                         SCOTCH_dgraphMapView (SCOTCH_Dgraph * const, const SCOTCH_Dmapping * const, FILE * const);
-+int                         SCOTCH_dgraphMapCompute (const SCOTCH_Dgraph * const, SCOTCH_Dmapping * const, const SCOTCH_Strat * const);
-+int                         SCOTCH_dgraphMap     (const SCOTCH_Dgraph * const, const SCOTCH_Arch * const, const SCOTCH_Strat * const, SCOTCH_Num * const);
-+int                         SCOTCH_dgraphPart    (const SCOTCH_Dgraph * const, const SCOTCH_Num, const SCOTCH_Strat * const, SCOTCH_Num * const);
++int                         SCOTCH_dgraphMapCompute (SCOTCH_Dgraph * const, SCOTCH_Dmapping * const, SCOTCH_Strat * const);
++int                         SCOTCH_dgraphMap     (SCOTCH_Dgraph * const, const SCOTCH_Arch * const, SCOTCH_Strat * const, SCOTCH_Num * const);
++int                         SCOTCH_dgraphPart    (SCOTCH_Dgraph * const, const SCOTCH_Num, SCOTCH_Strat * const, SCOTCH_Num * const);
 +int                         SCOTCH_dgraphCorderInit (const SCOTCH_Dgraph * const, SCOTCH_Ordering * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
 +void                        SCOTCH_dgraphCorderExit (const SCOTCH_Dgraph * const, SCOTCH_Ordering * const);
 +
@@ -593,15 +610,25 @@ index 0000000..584fa8e
 +int                         SCOTCH_dgraphOrderPerm (const SCOTCH_Dgraph * const, const SCOTCH_Dordering * const, SCOTCH_Num * const);
 +SCOTCH_Num                  SCOTCH_dgraphOrderCblkDist (const SCOTCH_Dgraph * const, const SCOTCH_Dordering * const);
 +int                         SCOTCH_dgraphOrderTreeDist (const SCOTCH_Dgraph * const, const SCOTCH_Dordering * const, SCOTCH_Num * const, SCOTCH_Num * const);
-+int                         SCOTCH_dgraphOrderCompute (const SCOTCH_Dgraph * const, SCOTCH_Dordering * const, const SCOTCH_Strat * const);
-+int                         SCOTCH_dgraphOrderComputeList (const SCOTCH_Dgraph * const, SCOTCH_Dordering * const, const SCOTCH_Num, const SCOTCH_Num * const, const SCOTCH_Strat * const);
++int                         SCOTCH_dgraphOrderCompute (SCOTCH_Dgraph * const, SCOTCH_Dordering * const, SCOTCH_Strat * const);
++int                         SCOTCH_dgraphOrderComputeList (SCOTCH_Dgraph * const, SCOTCH_Dordering * const, const SCOTCH_Num, const SCOTCH_Num * const, SCOTCH_Strat * const);
 +int                         SCOTCH_dgraphOrderGather (const SCOTCH_Dgraph * const, const SCOTCH_Dordering * const, SCOTCH_Ordering * const);
++
++SCOTCH_Dmapping *           SCOTCH_dmapAlloc    (void);
++
++SCOTCH_Dordering *          SCOTCH_dorderAlloc  (void);
 +#endif /* SCOTCH_PTSCOTCH */
 +
++void                        SCOTCH_errorProg    (const char * const);
++void                        SCOTCH_errorPrint   (const char * const, ...);
++void                        SCOTCH_errorPrintW  (const char * const, ...);
++
++SCOTCH_Geom *               SCOTCH_geomAlloc    (void);
 +int                         SCOTCH_geomInit     (SCOTCH_Geom * const);
 +void                        SCOTCH_geomExit     (SCOTCH_Geom * const);
 +void                        SCOTCH_geomData     (const SCOTCH_Geom * const, SCOTCH_Num * const, double ** const);
 +
++SCOTCH_Graph *              SCOTCH_graphAlloc   (void);
 +int                         SCOTCH_graphInit    (SCOTCH_Graph * const);
 +void                        SCOTCH_graphExit    (SCOTCH_Graph * const);
 +void                        SCOTCH_graphFree    (SCOTCH_Graph * const);
@@ -626,9 +653,9 @@ index 0000000..584fa8e
 +int                         SCOTCH_graphMapLoad (const SCOTCH_Graph * const, const SCOTCH_Mapping * const, FILE * const);
 +int                         SCOTCH_graphMapSave (const SCOTCH_Graph * const, const SCOTCH_Mapping * const, FILE * const);
 +int                         SCOTCH_graphMapView (const SCOTCH_Graph * const, const SCOTCH_Mapping * const, FILE * const);
-+int                         SCOTCH_graphMapCompute (const SCOTCH_Graph * const, SCOTCH_Mapping * const, const SCOTCH_Strat * const);
-+int                         SCOTCH_graphMap     (const SCOTCH_Graph * const, const SCOTCH_Arch * const, const SCOTCH_Strat * const, SCOTCH_Num * const);
-+int                         SCOTCH_graphPart    (const SCOTCH_Graph * const, const SCOTCH_Num, const SCOTCH_Strat * const, SCOTCH_Num * const);
++int                         SCOTCH_graphMapCompute (SCOTCH_Graph * const, SCOTCH_Mapping * const, SCOTCH_Strat * const);
++int                         SCOTCH_graphMap     (SCOTCH_Graph * const, const SCOTCH_Arch * const, SCOTCH_Strat * const, SCOTCH_Num * const);
++int                         SCOTCH_graphPart    (SCOTCH_Graph * const, const SCOTCH_Num, SCOTCH_Strat * const, SCOTCH_Num * const);
 +
 +int                         SCOTCH_graphOrderInit (const SCOTCH_Graph * const, SCOTCH_Ordering * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
 +void                        SCOTCH_graphOrderExit (const SCOTCH_Graph * const, SCOTCH_Ordering * const);
@@ -636,13 +663,20 @@ index 0000000..584fa8e
 +int                         SCOTCH_graphOrderSave (const SCOTCH_Graph * const, const SCOTCH_Ordering * const, FILE * const);
 +int                         SCOTCH_graphOrderSaveMap (const SCOTCH_Graph * const, const SCOTCH_Ordering * const, FILE * const);
 +int                         SCOTCH_graphOrderSaveTree (const SCOTCH_Graph * const, const SCOTCH_Ordering * const, FILE * const);
-+int                         SCOTCH_graphOrderCompute (const SCOTCH_Graph * const, SCOTCH_Ordering * const, const SCOTCH_Strat * const);
-+int                         SCOTCH_graphOrderComputeList (const SCOTCH_Graph * const, SCOTCH_Ordering * const, const SCOTCH_Num, const SCOTCH_Num * const, const SCOTCH_Strat * const);
++int                         SCOTCH_graphOrderCompute (SCOTCH_Graph * const, SCOTCH_Ordering * const, SCOTCH_Strat * const);
++int                         SCOTCH_graphOrderComputeList (SCOTCH_Graph * const, SCOTCH_Ordering * const, const SCOTCH_Num, const SCOTCH_Num * const, SCOTCH_Strat * const);
 +int                         SCOTCH_graphOrderFactor (const SCOTCH_Graph * const, const SCOTCH_Ordering * const, SCOTCH_Graph * const);
 +int                         SCOTCH_graphOrderView (const SCOTCH_Graph * const, const SCOTCH_Ordering * const, FILE * const);
-+int                         SCOTCH_graphOrder   (const SCOTCH_Graph * const, const SCOTCH_Strat * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
-+int                         SCOTCH_graphOrderList (const SCOTCH_Graph * const, const SCOTCH_Num, const SCOTCH_Num * const, const SCOTCH_Strat * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
++int                         SCOTCH_graphOrder   (SCOTCH_Graph * const, SCOTCH_Strat * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
++int                         SCOTCH_graphOrderList (SCOTCH_Graph * const, const SCOTCH_Num, const SCOTCH_Num * const, SCOTCH_Strat * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
 +int                         SCOTCH_graphOrderCheck (const SCOTCH_Graph * const, const SCOTCH_Ordering * const);
++
++SCOTCH_Mapping *            SCOTCH_mapAlloc     (void);
++
++void                        SCOTCH_memoryTrace  (void);
++void                        SCOTCH_memoryUntrace (void);
++void                        SCOTCH_memoryTraceReset (void);
++unsigned long               SCOTCH_memoryTraceGet (void);
 +
 +int                         SCOTCH_meshInit     (SCOTCH_Mesh * const);
 +void                        SCOTCH_meshExit     (SCOTCH_Mesh * const);
@@ -663,42 +697,47 @@ index 0000000..584fa8e
 +int                         SCOTCH_meshOrderSave (const SCOTCH_Mesh * const, const SCOTCH_Ordering * const, FILE * const);
 +int                         SCOTCH_meshOrderSaveMap (const SCOTCH_Mesh * const, const SCOTCH_Ordering * const, FILE * const);
 +int                         SCOTCH_meshOrderSaveTree (const SCOTCH_Mesh * const, const SCOTCH_Ordering * const, FILE * const);
-+int                         SCOTCH_meshOrderCompute (const SCOTCH_Mesh * const, SCOTCH_Ordering * const, const SCOTCH_Strat * const);
-+int                         SCOTCH_meshOrderComputeList (const SCOTCH_Mesh * const, SCOTCH_Ordering * const, const SCOTCH_Num, const SCOTCH_Num * const, const SCOTCH_Strat * const);
-+int                         SCOTCH_meshOrder    (const SCOTCH_Mesh * const, const SCOTCH_Strat * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
-+int                         SCOTCH_meshOrderList (const SCOTCH_Mesh * const, const SCOTCH_Num, const SCOTCH_Num * const, const SCOTCH_Strat * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
++int                         SCOTCH_meshOrderCompute (SCOTCH_Mesh * const, SCOTCH_Ordering * const, SCOTCH_Strat * const);
++int                         SCOTCH_meshOrderComputeList (SCOTCH_Mesh * const, SCOTCH_Ordering * const, const SCOTCH_Num, const SCOTCH_Num * const, SCOTCH_Strat * const);
++int                         SCOTCH_meshOrder    (SCOTCH_Mesh * const, SCOTCH_Strat * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
++int                         SCOTCH_meshOrderList (SCOTCH_Mesh * const, const SCOTCH_Num, const SCOTCH_Num * const, SCOTCH_Strat * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
 +int                         SCOTCH_meshOrderCheck (const SCOTCH_Mesh * const, const SCOTCH_Ordering * const);
++
++SCOTCH_Ordering *           SCOTCH_orderAlloc   (void);
 +
 +void                        SCOTCH_randomReset  (void);
 +
++SCOTCH_Strat *              SCOTCH_stratAlloc   (void);
 +int                         SCOTCH_stratInit    (SCOTCH_Strat * const);
 +void                        SCOTCH_stratExit    (SCOTCH_Strat * const);
 +void                        SCOTCH_stratFree    (SCOTCH_Strat * const);
 +int                         SCOTCH_stratSave    (const SCOTCH_Strat * const, FILE * const);
 +#ifdef SCOTCH_PTSCOTCH
 +int                         SCOTCH_stratDgraphMap (SCOTCH_Strat * const, const char * const);
++int                         SCOTCH_stratDgraphMapBuild (SCOTCH_Strat * const, const SCOTCH_Num, const SCOTCH_Num, const SCOTCH_Num, const double);
 +int                         SCOTCH_stratDgraphOrder (SCOTCH_Strat * const, const char * const);
++int                         SCOTCH_stratDgraphOrderBuild (SCOTCH_Strat * const, const SCOTCH_Num, const SCOTCH_Num, const double);
 +#endif /* SCOTCH_PTSCOTCH */
 +int                         SCOTCH_stratGraphBipart (SCOTCH_Strat * const, const char * const);
 +int                         SCOTCH_stratGraphMap (SCOTCH_Strat * const, const char * const);
++int                         SCOTCH_stratGraphMapBuild (SCOTCH_Strat * const, const SCOTCH_Num, const SCOTCH_Num, const double);
 +int                         SCOTCH_stratGraphOrder (SCOTCH_Strat * const, const char * const);
++int                         SCOTCH_stratGraphOrderBuild (SCOTCH_Strat * const, const SCOTCH_Num, const double);
 +int                         SCOTCH_stratMeshOrder (SCOTCH_Strat * const, const char * const);
++int                         SCOTCH_stratMeshOrderBuild (SCOTCH_Strat * const, const SCOTCH_Num, const double);
 +
-+void                        SCOTCH_memoryTrace  (void);
-+void                        SCOTCH_memoryUntrace (void);
-+void                        SCOTCH_memoryTraceReset (void);
-+unsigned long               SCOTCH_memoryTraceGet (void);
++void                        SCOTCH_version      (int * const, int * const, int * const);
 +
 +#ifdef __cplusplus
 +}
 +#endif /* __cplusplus */
 diff --git a/src/libscotch/scotch.h_mingw64 b/src/libscotch/scotch.h_mingw64
 new file mode 100644
-index 0000000..eae94b7
+index 0000000..a709f8f
 --- /dev/null
 +++ b/src/libscotch/scotch.h_mingw64
-@@ -0,0 +1,288 @@
-+/* Copyright 2004,2007-2009 ENSEIRB, INRIA & CNRS
+@@ -0,0 +1,327 @@
++/* Copyright 2004,2007-2010 ENSEIRB, INRIA & CNRS
 +**
 +** This file is part of the Scotch software package for static mapping,
 +** graph partitioning and sparse matrix ordering.
@@ -731,13 +770,13 @@ index 0000000..eae94b7
 +*/
 +/************************************************************/
 +/**                                                        **/
-+/**   NAME       : scotch.h                                **/
++/**   NAME       : ptscotch.h                              **/
 +/**                                                        **/
 +/**   AUTHOR     : Francois PELLEGRINI                     **/
 +/**                                                        **/
 +/**   FUNCTION   : Declaration file for the LibScotch      **/
 +/**                static mapping and sparse matrix block  **/
-+/**                ordering sequential library.            **/
++/**                ordering library.                       **/
 +/**                                                        **/
 +/**   DATES      : # Version 3.2  : from : 07 sep 1996     **/
 +/**                                 to     22 aug 1998     **/
@@ -750,7 +789,7 @@ index 0000000..eae94b7
 +/**                # Version 5.0  : from : 26 apr 2006     **/
 +/**                                 to   : 20 feb 2008     **/
 +/**                # Version 5.1  : from : 30 nov 2007     **/
-+/**                                 to   : 06 jun 2009     **/
++/**                                 to   : 17 nov 2010     **/
 +/**                                                        **/
 +/************************************************************/
 +
@@ -758,21 +797,39 @@ index 0000000..eae94b7
 +**  The type and structure definitions.
 +*/
 +
++/*+ Version flags. +*/
++
++#define SCOTCH_VERSION 5
++#define SCOTCH_RELEASE 1
++#define SCOTCH_PATCHLEVEL 10
++
 +/*+ Parallel processing flag. +*/
 +
 +#ifndef SCOTCH_PTSCOTCH
-+#define SCOTCH_PTSCOTCH
++#define SCOTCH_SEQSCOTCH
 +#endif /* SCOTCH_PTSCOTCH */
 +
 +/*+ Integer type. +*/
 +
++typedef int SCOTCH_Idx;
++
 +typedef int SCOTCH_Num;
 +
 +#define SCOTCH_NUMMAX               ((int) (((unsigned int) 1 << ((sizeof (int) << 3) - 1)) - 1))
++#define SCOTCH_NUMSTRING            "%d"
 +
-+/*+ Opaque objects. The dummy sizes of these objects,
-+computed at compile-time by program "dummysizes",
-+are given as double values for proper padding +*/
++/*+ Strategy string parametrization values +*/
++
++#define SCOTCH_STRATQUALITY         1
++#define SCOTCH_STRATSPEED           2
++#define SCOTCH_STRATBALANCE         4
++#define SCOTCH_STRATSAFETY          8
++#define SCOTCH_STRATSCALABILITY     16
++
++/*+ Opaque objects. The dummy sizes of these
++objects, computed at compile-time by program
++"dummysizes", are given as double values for
++proper padding                               +*/
 +
 +typedef struct {
 +  double                    dummy[5];
@@ -780,7 +837,7 @@ index 0000000..eae94b7
 +
 +#ifdef SCOTCH_PTSCOTCH
 +typedef struct {
-+  double                    dummy[28];
++  double                    dummy[1];
 +} SCOTCH_Dgraph;
 +
 +typedef struct {
@@ -788,11 +845,11 @@ index 0000000..eae94b7
 +} SCOTCH_DgraphHaloReq;
 +
 +typedef struct {
-+  double                    dummy[9];
++  double                    dummy[1];
 +} SCOTCH_Dmapping;
 +
 +typedef struct {
-+  double                    dummy[5];
++  double                    dummy[1];
 +} SCOTCH_Dordering;
 +#endif /* SCOTCH_PTSCOTCH */
 +
@@ -801,7 +858,7 @@ index 0000000..eae94b7
 +} SCOTCH_Geom;
 +
 +typedef struct {
-+  double                    dummy[14];
++  double                    dummy[12];
 +} SCOTCH_Graph;
 +
 +typedef struct {
@@ -828,10 +885,7 @@ index 0000000..eae94b7
 +extern "C" {
 +#endif /* __cplusplus */
 +
-+void                        SCOTCH_errorProg    (const char * const);
-+void                        SCOTCH_errorPrint   (const char * const, ...);
-+void                        SCOTCH_errorPrintW  (const char * const, ...);
-+
++SCOTCH_Arch *               SCOTCH_archAlloc    (void);
 +int                         SCOTCH_archInit     (SCOTCH_Arch * const);
 +void                        SCOTCH_archExit     (SCOTCH_Arch * const);
 +int                         SCOTCH_archLoad     (SCOTCH_Arch * const, FILE * const);
@@ -844,13 +898,14 @@ index 0000000..eae94b7
 +int                         SCOTCH_archHcub     (SCOTCH_Arch * const, const SCOTCH_Num);
 +int                         SCOTCH_archMesh2    (SCOTCH_Arch * const, const SCOTCH_Num, const SCOTCH_Num);
 +int                         SCOTCH_archMesh3    (SCOTCH_Arch * const, const SCOTCH_Num, const SCOTCH_Num, const SCOTCH_Num);
-+int                         SCOTCH_archTleaf    (SCOTCH_Arch * const, const SCOTCH_Num, const SCOTCH_Num, const SCOTCH_Num);
++int                         SCOTCH_archTleaf    (SCOTCH_Arch * const, const SCOTCH_Num, const SCOTCH_Num * const, const SCOTCH_Num * const);
 +int                         SCOTCH_archTorus2   (SCOTCH_Arch * const, const SCOTCH_Num, const SCOTCH_Num);
 +int                         SCOTCH_archTorus3   (SCOTCH_Arch * const, const SCOTCH_Num, const SCOTCH_Num, const SCOTCH_Num);
 +int                         SCOTCH_archVcmplt   (SCOTCH_Arch * const);
 +int                         SCOTCH_archVhcub    (SCOTCH_Arch * const);
 +
 +#ifdef SCOTCH_PTSCOTCH
++SCOTCH_Dgraph *             SCOTCH_dgraphAlloc  (void);
 +int                         SCOTCH_dgraphInit   (SCOTCH_Dgraph * const, MPI_Comm);
 +void                        SCOTCH_dgraphExit   (SCOTCH_Dgraph * const);
 +void                        SCOTCH_dgraphFree   (SCOTCH_Dgraph * const);
@@ -858,7 +913,7 @@ index 0000000..eae94b7
 +int                         SCOTCH_dgraphSave   (SCOTCH_Dgraph * const, FILE * const);
 +int                         SCOTCH_dgraphCheck  (const SCOTCH_Dgraph * const);
 +int                         SCOTCH_dgraphBuild  (SCOTCH_Dgraph * const, const SCOTCH_Num, const SCOTCH_Num, const SCOTCH_Num, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, const SCOTCH_Num, const SCOTCH_Num, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
-+int                         SCOTCH_dgraphBuildGrid3D (SCOTCH_Dgraph * const, const SCOTCH_Num, const SCOTCH_Num, const SCOTCH_Num, const SCOTCH_Num);
++int                         SCOTCH_dgraphBuildGrid3D (SCOTCH_Dgraph * const, const SCOTCH_Num, const SCOTCH_Num, const SCOTCH_Num, const SCOTCH_Num, const SCOTCH_Num, const int);
 +int                         SCOTCH_dgraphGather (const SCOTCH_Dgraph * const, SCOTCH_Graph * const);
 +int                         SCOTCH_dgraphScatter (SCOTCH_Dgraph * const, const SCOTCH_Graph * const);
 +void                        SCOTCH_dgraphSize   (const SCOTCH_Dgraph * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
@@ -867,14 +922,15 @@ index 0000000..eae94b7
 +int                         SCOTCH_dgraphGhst   (SCOTCH_Dgraph * const);
 +int                         SCOTCH_dgraphHalo   (SCOTCH_Dgraph * const, void * const, const MPI_Datatype);
 +int                         SCOTCH_dgraphHaloAsync (SCOTCH_Dgraph * const, void * const, const MPI_Datatype, SCOTCH_DgraphHaloReq * const);
++SCOTCH_DgraphHaloReq *      SCOTCH_dgraphHaloReqAlloc (void);
 +int                         SCOTCH_dgraphHaloWait (SCOTCH_DgraphHaloReq * const);
 +int                         SCOTCH_dgraphMapInit (const SCOTCH_Dgraph * const, SCOTCH_Dmapping * const, const SCOTCH_Arch * const, SCOTCH_Num * const);
 +void                        SCOTCH_dgraphMapExit (const SCOTCH_Dgraph * const, SCOTCH_Dmapping * const);
 +int                         SCOTCH_dgraphMapSave (const SCOTCH_Dgraph * const, const SCOTCH_Dmapping * const, FILE * const);
 +int                         SCOTCH_dgraphMapView (SCOTCH_Dgraph * const, const SCOTCH_Dmapping * const, FILE * const);
-+int                         SCOTCH_dgraphMapCompute (const SCOTCH_Dgraph * const, SCOTCH_Dmapping * const, const SCOTCH_Strat * const);
-+int                         SCOTCH_dgraphMap     (const SCOTCH_Dgraph * const, const SCOTCH_Arch * const, const SCOTCH_Strat * const, SCOTCH_Num * const);
-+int                         SCOTCH_dgraphPart    (const SCOTCH_Dgraph * const, const SCOTCH_Num, const SCOTCH_Strat * const, SCOTCH_Num * const);
++int                         SCOTCH_dgraphMapCompute (SCOTCH_Dgraph * const, SCOTCH_Dmapping * const, SCOTCH_Strat * const);
++int                         SCOTCH_dgraphMap     (SCOTCH_Dgraph * const, const SCOTCH_Arch * const, SCOTCH_Strat * const, SCOTCH_Num * const);
++int                         SCOTCH_dgraphPart    (SCOTCH_Dgraph * const, const SCOTCH_Num, SCOTCH_Strat * const, SCOTCH_Num * const);
 +int                         SCOTCH_dgraphCorderInit (const SCOTCH_Dgraph * const, SCOTCH_Ordering * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
 +void                        SCOTCH_dgraphCorderExit (const SCOTCH_Dgraph * const, SCOTCH_Ordering * const);
 +
@@ -887,15 +943,25 @@ index 0000000..eae94b7
 +int                         SCOTCH_dgraphOrderPerm (const SCOTCH_Dgraph * const, const SCOTCH_Dordering * const, SCOTCH_Num * const);
 +SCOTCH_Num                  SCOTCH_dgraphOrderCblkDist (const SCOTCH_Dgraph * const, const SCOTCH_Dordering * const);
 +int                         SCOTCH_dgraphOrderTreeDist (const SCOTCH_Dgraph * const, const SCOTCH_Dordering * const, SCOTCH_Num * const, SCOTCH_Num * const);
-+int                         SCOTCH_dgraphOrderCompute (const SCOTCH_Dgraph * const, SCOTCH_Dordering * const, const SCOTCH_Strat * const);
-+int                         SCOTCH_dgraphOrderComputeList (const SCOTCH_Dgraph * const, SCOTCH_Dordering * const, const SCOTCH_Num, const SCOTCH_Num * const, const SCOTCH_Strat * const);
++int                         SCOTCH_dgraphOrderCompute (SCOTCH_Dgraph * const, SCOTCH_Dordering * const, SCOTCH_Strat * const);
++int                         SCOTCH_dgraphOrderComputeList (SCOTCH_Dgraph * const, SCOTCH_Dordering * const, const SCOTCH_Num, const SCOTCH_Num * const, SCOTCH_Strat * const);
 +int                         SCOTCH_dgraphOrderGather (const SCOTCH_Dgraph * const, const SCOTCH_Dordering * const, SCOTCH_Ordering * const);
++
++SCOTCH_Dmapping *           SCOTCH_dmapAlloc    (void);
++
++SCOTCH_Dordering *          SCOTCH_dorderAlloc  (void);
 +#endif /* SCOTCH_PTSCOTCH */
 +
++void                        SCOTCH_errorProg    (const char * const);
++void                        SCOTCH_errorPrint   (const char * const, ...);
++void                        SCOTCH_errorPrintW  (const char * const, ...);
++
++SCOTCH_Geom *               SCOTCH_geomAlloc    (void);
 +int                         SCOTCH_geomInit     (SCOTCH_Geom * const);
 +void                        SCOTCH_geomExit     (SCOTCH_Geom * const);
 +void                        SCOTCH_geomData     (const SCOTCH_Geom * const, SCOTCH_Num * const, double ** const);
 +
++SCOTCH_Graph *              SCOTCH_graphAlloc   (void);
 +int                         SCOTCH_graphInit    (SCOTCH_Graph * const);
 +void                        SCOTCH_graphExit    (SCOTCH_Graph * const);
 +void                        SCOTCH_graphFree    (SCOTCH_Graph * const);
@@ -920,9 +986,9 @@ index 0000000..eae94b7
 +int                         SCOTCH_graphMapLoad (const SCOTCH_Graph * const, const SCOTCH_Mapping * const, FILE * const);
 +int                         SCOTCH_graphMapSave (const SCOTCH_Graph * const, const SCOTCH_Mapping * const, FILE * const);
 +int                         SCOTCH_graphMapView (const SCOTCH_Graph * const, const SCOTCH_Mapping * const, FILE * const);
-+int                         SCOTCH_graphMapCompute (const SCOTCH_Graph * const, SCOTCH_Mapping * const, const SCOTCH_Strat * const);
-+int                         SCOTCH_graphMap     (const SCOTCH_Graph * const, const SCOTCH_Arch * const, const SCOTCH_Strat * const, SCOTCH_Num * const);
-+int                         SCOTCH_graphPart    (const SCOTCH_Graph * const, const SCOTCH_Num, const SCOTCH_Strat * const, SCOTCH_Num * const);
++int                         SCOTCH_graphMapCompute (SCOTCH_Graph * const, SCOTCH_Mapping * const, SCOTCH_Strat * const);
++int                         SCOTCH_graphMap     (SCOTCH_Graph * const, const SCOTCH_Arch * const, SCOTCH_Strat * const, SCOTCH_Num * const);
++int                         SCOTCH_graphPart    (SCOTCH_Graph * const, const SCOTCH_Num, SCOTCH_Strat * const, SCOTCH_Num * const);
 +
 +int                         SCOTCH_graphOrderInit (const SCOTCH_Graph * const, SCOTCH_Ordering * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
 +void                        SCOTCH_graphOrderExit (const SCOTCH_Graph * const, SCOTCH_Ordering * const);
@@ -930,13 +996,20 @@ index 0000000..eae94b7
 +int                         SCOTCH_graphOrderSave (const SCOTCH_Graph * const, const SCOTCH_Ordering * const, FILE * const);
 +int                         SCOTCH_graphOrderSaveMap (const SCOTCH_Graph * const, const SCOTCH_Ordering * const, FILE * const);
 +int                         SCOTCH_graphOrderSaveTree (const SCOTCH_Graph * const, const SCOTCH_Ordering * const, FILE * const);
-+int                         SCOTCH_graphOrderCompute (const SCOTCH_Graph * const, SCOTCH_Ordering * const, const SCOTCH_Strat * const);
-+int                         SCOTCH_graphOrderComputeList (const SCOTCH_Graph * const, SCOTCH_Ordering * const, const SCOTCH_Num, const SCOTCH_Num * const, const SCOTCH_Strat * const);
++int                         SCOTCH_graphOrderCompute (SCOTCH_Graph * const, SCOTCH_Ordering * const, SCOTCH_Strat * const);
++int                         SCOTCH_graphOrderComputeList (SCOTCH_Graph * const, SCOTCH_Ordering * const, const SCOTCH_Num, const SCOTCH_Num * const, SCOTCH_Strat * const);
 +int                         SCOTCH_graphOrderFactor (const SCOTCH_Graph * const, const SCOTCH_Ordering * const, SCOTCH_Graph * const);
 +int                         SCOTCH_graphOrderView (const SCOTCH_Graph * const, const SCOTCH_Ordering * const, FILE * const);
-+int                         SCOTCH_graphOrder   (const SCOTCH_Graph * const, const SCOTCH_Strat * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
-+int                         SCOTCH_graphOrderList (const SCOTCH_Graph * const, const SCOTCH_Num, const SCOTCH_Num * const, const SCOTCH_Strat * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
++int                         SCOTCH_graphOrder   (SCOTCH_Graph * const, SCOTCH_Strat * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
++int                         SCOTCH_graphOrderList (SCOTCH_Graph * const, const SCOTCH_Num, const SCOTCH_Num * const, SCOTCH_Strat * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
 +int                         SCOTCH_graphOrderCheck (const SCOTCH_Graph * const, const SCOTCH_Ordering * const);
++
++SCOTCH_Mapping *            SCOTCH_mapAlloc     (void);
++
++void                        SCOTCH_memoryTrace  (void);
++void                        SCOTCH_memoryUntrace (void);
++void                        SCOTCH_memoryTraceReset (void);
++unsigned long               SCOTCH_memoryTraceGet (void);
 +
 +int                         SCOTCH_meshInit     (SCOTCH_Mesh * const);
 +void                        SCOTCH_meshExit     (SCOTCH_Mesh * const);
@@ -957,42 +1030,47 @@ index 0000000..eae94b7
 +int                         SCOTCH_meshOrderSave (const SCOTCH_Mesh * const, const SCOTCH_Ordering * const, FILE * const);
 +int                         SCOTCH_meshOrderSaveMap (const SCOTCH_Mesh * const, const SCOTCH_Ordering * const, FILE * const);
 +int                         SCOTCH_meshOrderSaveTree (const SCOTCH_Mesh * const, const SCOTCH_Ordering * const, FILE * const);
-+int                         SCOTCH_meshOrderCompute (const SCOTCH_Mesh * const, SCOTCH_Ordering * const, const SCOTCH_Strat * const);
-+int                         SCOTCH_meshOrderComputeList (const SCOTCH_Mesh * const, SCOTCH_Ordering * const, const SCOTCH_Num, const SCOTCH_Num * const, const SCOTCH_Strat * const);
-+int                         SCOTCH_meshOrder    (const SCOTCH_Mesh * const, const SCOTCH_Strat * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
-+int                         SCOTCH_meshOrderList (const SCOTCH_Mesh * const, const SCOTCH_Num, const SCOTCH_Num * const, const SCOTCH_Strat * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
++int                         SCOTCH_meshOrderCompute (SCOTCH_Mesh * const, SCOTCH_Ordering * const, SCOTCH_Strat * const);
++int                         SCOTCH_meshOrderComputeList (SCOTCH_Mesh * const, SCOTCH_Ordering * const, const SCOTCH_Num, const SCOTCH_Num * const, SCOTCH_Strat * const);
++int                         SCOTCH_meshOrder    (SCOTCH_Mesh * const, SCOTCH_Strat * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
++int                         SCOTCH_meshOrderList (SCOTCH_Mesh * const, const SCOTCH_Num, const SCOTCH_Num * const, SCOTCH_Strat * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const, SCOTCH_Num * const);
 +int                         SCOTCH_meshOrderCheck (const SCOTCH_Mesh * const, const SCOTCH_Ordering * const);
++
++SCOTCH_Ordering *           SCOTCH_orderAlloc   (void);
 +
 +void                        SCOTCH_randomReset  (void);
 +
++SCOTCH_Strat *              SCOTCH_stratAlloc   (void);
 +int                         SCOTCH_stratInit    (SCOTCH_Strat * const);
 +void                        SCOTCH_stratExit    (SCOTCH_Strat * const);
 +void                        SCOTCH_stratFree    (SCOTCH_Strat * const);
 +int                         SCOTCH_stratSave    (const SCOTCH_Strat * const, FILE * const);
 +#ifdef SCOTCH_PTSCOTCH
 +int                         SCOTCH_stratDgraphMap (SCOTCH_Strat * const, const char * const);
++int                         SCOTCH_stratDgraphMapBuild (SCOTCH_Strat * const, const SCOTCH_Num, const SCOTCH_Num, const SCOTCH_Num, const double);
 +int                         SCOTCH_stratDgraphOrder (SCOTCH_Strat * const, const char * const);
++int                         SCOTCH_stratDgraphOrderBuild (SCOTCH_Strat * const, const SCOTCH_Num, const SCOTCH_Num, const double);
 +#endif /* SCOTCH_PTSCOTCH */
 +int                         SCOTCH_stratGraphBipart (SCOTCH_Strat * const, const char * const);
 +int                         SCOTCH_stratGraphMap (SCOTCH_Strat * const, const char * const);
++int                         SCOTCH_stratGraphMapBuild (SCOTCH_Strat * const, const SCOTCH_Num, const SCOTCH_Num, const double);
 +int                         SCOTCH_stratGraphOrder (SCOTCH_Strat * const, const char * const);
++int                         SCOTCH_stratGraphOrderBuild (SCOTCH_Strat * const, const SCOTCH_Num, const double);
 +int                         SCOTCH_stratMeshOrder (SCOTCH_Strat * const, const char * const);
++int                         SCOTCH_stratMeshOrderBuild (SCOTCH_Strat * const, const SCOTCH_Num, const double);
 +
-+void                        SCOTCH_memoryTrace  (void);
-+void                        SCOTCH_memoryUntrace (void);
-+void                        SCOTCH_memoryTraceReset (void);
-+unsigned long               SCOTCH_memoryTraceGet (void);
++void                        SCOTCH_version      (int * const, int * const, int * const);
 +
 +#ifdef __cplusplus
 +}
 +#endif /* __cplusplus */
 diff --git a/src/libscotch/scotchf.h_mingw32 b/src/libscotch/scotchf.h_mingw32
 new file mode 100644
-index 0000000..7e7770b
+index 0000000..92069ec
 --- /dev/null
 +++ b/src/libscotch/scotchf.h_mingw32
-@@ -0,0 +1,80 @@
-+!* Copyright 2004,2007,2009 ENSEIRB, INRIA & CNRS
+@@ -0,0 +1,94 @@
++!* Copyright 2004,2007,2009,2010 ENSEIRB, INRIA & CNRS
 +!*
 +!* This file is part of the Scotch software package for static mapping,
 +!* graph partitioning and sparse matrix ordering.
@@ -1025,7 +1103,7 @@ index 0000000..7e7770b
 +!*
 +!***********************************************************
 +!*                                                        **
-+!*   NAME       : scotchf.h                               **
++!*   NAME       : ptscotchf.h                             **
 +!*                                                        **
 +!*   AUTHOR     : Francois PELLEGRINI                     **
 +!*                                                        **
@@ -1041,9 +1119,23 @@ index 0000000..7e7770b
 +!*                # Version 5.0  : from : 26 apr 2006     **
 +!*                                 to     26 apr 2006     **
 +!*                # Version 5.1  : from : 26 mar 2009     **
-+!*                                 to     10 may 2009     **
++!*                                 to     24 jul 2010     **
 +!*                                                        **
 +!***********************************************************
++
++!* Flag definitions for the strategy
++!* string selection routines.
++
++        INTEGER SCOTCH_STRATQUALITY
++        INTEGER SCOTCH_STRATSPEED
++        INTEGER SCOTCH_STRATBALANCE
++        INTEGER SCOTCH_STRATSCALABILITY
++        INTEGER SCOTCH_STRATSAFETY
++        PARAMETER (SCOTCH_STRATQUALITY     = 1)
++        PARAMETER (SCOTCH_STRATSPEED       = 2)
++        PARAMETER (SCOTCH_STRATBALANCE     = 4)
++        PARAMETER (SCOTCH_STRATSAFETY      = 8)
++        PARAMETER (SCOTCH_STRATSCALABILITY = 16)
 +
 +!* Size definitions for the SCOTCH opaque
 +!* structures. These structures must be
@@ -1063,22 +1155,22 @@ index 0000000..7e7770b
 +        INTEGER SCOTCH_ORDERDIM
 +        INTEGER SCOTCH_STRATDIM
 +        PARAMETER (SCOTCH_ARCHDIM          = 5)
-+        PARAMETER (SCOTCH_DGRAPHDIM        = 19)
++        PARAMETER (SCOTCH_DGRAPHDIM        = 1)
 +        PARAMETER (SCOTCH_DGRAPHHALOREQDIM = 1)
-+        PARAMETER (SCOTCH_DORDERDIM        = 4)
++        PARAMETER (SCOTCH_DORDERDIM        = 1)
 +        PARAMETER (SCOTCH_GEOMDIM          = 1)
-+        PARAMETER (SCOTCH_GRAPHDIM         = 9)
++        PARAMETER (SCOTCH_GRAPHDIM         = 8)
 +        PARAMETER (SCOTCH_MAPDIM           = 11)
 +        PARAMETER (SCOTCH_MESHDIM          = 10)
 +        PARAMETER (SCOTCH_ORDERDIM         = 8)
 +        PARAMETER (SCOTCH_STRATDIM         = 1)
 diff --git a/src/libscotch/scotchf.h_mingw64 b/src/libscotch/scotchf.h_mingw64
-new file mode 100644
-index 0000000..91ff6be
+new file mode 100755
+index 0000000..5bb3f80
 --- /dev/null
 +++ b/src/libscotch/scotchf.h_mingw64
-@@ -0,0 +1,80 @@
-+!* Copyright 2004,2007,2009 ENSEIRB, INRIA & CNRS
+@@ -0,0 +1,94 @@
++!* Copyright 2004,2007,2009,2010 ENSEIRB, INRIA & CNRS
 +!*
 +!* This file is part of the Scotch software package for static mapping,
 +!* graph partitioning and sparse matrix ordering.
@@ -1111,7 +1203,7 @@ index 0000000..91ff6be
 +!*
 +!***********************************************************
 +!*                                                        **
-+!*   NAME       : scotchf.h                               **
++!*   NAME       : ptscotchf.h                             **
 +!*                                                        **
 +!*   AUTHOR     : Francois PELLEGRINI                     **
 +!*                                                        **
@@ -1127,9 +1219,23 @@ index 0000000..91ff6be
 +!*                # Version 5.0  : from : 26 apr 2006     **
 +!*                                 to     26 apr 2006     **
 +!*                # Version 5.1  : from : 26 mar 2009     **
-+!*                                 to     10 may 2009     **
++!*                                 to     24 jul 2010     **
 +!*                                                        **
 +!***********************************************************
++
++!* Flag definitions for the strategy
++!* string selection routines.
++
++        INTEGER SCOTCH_STRATQUALITY
++        INTEGER SCOTCH_STRATSPEED
++        INTEGER SCOTCH_STRATBALANCE
++        INTEGER SCOTCH_STRATSCALABILITY
++        INTEGER SCOTCH_STRATSAFETY
++        PARAMETER (SCOTCH_STRATQUALITY     = 1)
++        PARAMETER (SCOTCH_STRATSPEED       = 2)
++        PARAMETER (SCOTCH_STRATBALANCE     = 4)
++        PARAMETER (SCOTCH_STRATSAFETY      = 8)
++        PARAMETER (SCOTCH_STRATSCALABILITY = 16)
 +
 +!* Size definitions for the SCOTCH opaque
 +!* structures. These structures must be
@@ -1149,11 +1255,11 @@ index 0000000..91ff6be
 +        INTEGER SCOTCH_ORDERDIM
 +        INTEGER SCOTCH_STRATDIM
 +        PARAMETER (SCOTCH_ARCHDIM          = 5)
-+        PARAMETER (SCOTCH_DGRAPHDIM        = 28)
++        PARAMETER (SCOTCH_DGRAPHDIM        = 1)
 +        PARAMETER (SCOTCH_DGRAPHHALOREQDIM = 1)
-+        PARAMETER (SCOTCH_DORDERDIM        = 5)
++        PARAMETER (SCOTCH_DORDERDIM        = 1)
 +        PARAMETER (SCOTCH_GEOMDIM          = 2)
-+        PARAMETER (SCOTCH_GRAPHDIM         = 14)
++        PARAMETER (SCOTCH_GRAPHDIM         = 12)
 +        PARAMETER (SCOTCH_MAPDIM           = 13)
 +        PARAMETER (SCOTCH_MESHDIM          = 15)
 +        PARAMETER (SCOTCH_ORDERDIM         = 12)
