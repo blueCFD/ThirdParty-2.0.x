@@ -129,9 +129,9 @@ then
     echo
 
     if [ -f $SCOTCH_ARCH_PATH/include/$FOAM_MPI/ptscotch.h \
-      -a -r $FOAM_EXT_LIBBIN/libptscotch.dll \
-      -a -r $FOAM_EXT_LIBBIN/libptscotcherr.dll \
-      -a -r $FOAM_EXT_LIBBIN/libptscotcherrexit.dll ]
+      -a -r $FOAM_EXT_LIBBIN/$FOAM_MPI/libptscotch.dll \
+      -a -r $FOAM_EXT_LIBBIN/$FOAM_MPI/libptscotcherr.dll \
+      -a -r $FOAM_EXT_LIBBIN/$FOAM_MPI/libptscotcherrexit.dll ]
     then
         echo "    ptscotch header in $SCOTCH_ARCH_PATH/include/$FOAM_MPI"
         echo "    ptscotch libs   in $FOAM_EXT_LIBBIN/$FOAM_MPI"
