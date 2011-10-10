@@ -1,6 +1,6 @@
 diff --git a/src/Make.inc/Makefile.inc.amd64-mingw32msvc b/src/Make.inc/Makefile.inc.amd64-mingw32msvc
 new file mode 100644
-index 0000000..8f5238c
+index 0000000..081e451
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.amd64-mingw32msvc
 @@ -0,0 +1,35 @@
@@ -21,7 +21,7 @@ index 0000000..8f5238c
 +CCSS = sh cpscotch_headers.sh mingw64
 +CCP     = $(WM_CC) -m$(WM_ARCH_OPTION)
 +CCD     = $(CCSS)
-+CFLAGS = -O3 -Wall -Dlinux -DNDEBUG -DWIN64 -DLITTLE_ENDIAN -Drestrict=__restrict -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)' -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 -I$(MPI_ARCH_PATH)/include
++CFLAGS = -O3 -Wall -Dlinux -DCOMMON_WINDOWS -DNDEBUG -DWIN64 -DLITTLE_ENDIAN -Drestrict=__restrict -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)' -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 -I$(MPI_ARCH_PATH)/include
 +# -DCOMMON_TIMING_OLD
 +
 +LDFLAGS_P1 = -lz -lm -L$(WM_PROJECT_DIR)/lib/$(WM_OPTIONS)
@@ -41,7 +41,7 @@ index 0000000..8f5238c
 +YACC = bison -y
 diff --git a/src/Make.inc/Makefile.inc.i586-mingw32msvc b/src/Make.inc/Makefile.inc.i586-mingw32msvc
 new file mode 100644
-index 0000000..fc8c9cf
+index 0000000..9137017
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.i586-mingw32msvc
 @@ -0,0 +1,35 @@
@@ -62,7 +62,7 @@ index 0000000..fc8c9cf
 +CCSS = sh cpscotch_headers.sh mingw32
 +CCP     = $(WM_CC) -m$(WM_ARCH_OPTION)
 +CCD     = $(CCSS)
-+CFLAGS = -O3 -Wall -Dlinux -DNDEBUG -DWIN32 -DLITTLE_ENDIAN -Drestrict=__restrict -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)' -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 -I$(MPI_ARCH_PATH)/include
++CFLAGS = -O3 -Wall -Dlinux -DCOMMON_WINDOWS -DNDEBUG -DWIN32 -DLITTLE_ENDIAN -Drestrict=__restrict -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)' -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 -I$(MPI_ARCH_PATH)/include
 +# -DCOMMON_TIMING_OLD
 +
 +LDFLAGS_P1 = -lz -lm -L$(WM_PROJECT_DIR)/lib/$(WM_OPTIONS)
@@ -82,7 +82,7 @@ index 0000000..fc8c9cf
 +YACC = bison -y
 diff --git a/src/Make.inc/Makefile.inc.i686-w64-mingw32 b/src/Make.inc/Makefile.inc.i686-w64-mingw32
 new file mode 100644
-index 0000000..fc8c9cf
+index 0000000..9137017
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.i686-w64-mingw32
 @@ -0,0 +1,35 @@
@@ -103,7 +103,7 @@ index 0000000..fc8c9cf
 +CCSS = sh cpscotch_headers.sh mingw32
 +CCP     = $(WM_CC) -m$(WM_ARCH_OPTION)
 +CCD     = $(CCSS)
-+CFLAGS = -O3 -Wall -Dlinux -DNDEBUG -DWIN32 -DLITTLE_ENDIAN -Drestrict=__restrict -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)' -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 -I$(MPI_ARCH_PATH)/include
++CFLAGS = -O3 -Wall -Dlinux -DCOMMON_WINDOWS -DNDEBUG -DWIN32 -DLITTLE_ENDIAN -Drestrict=__restrict -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)' -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 -I$(MPI_ARCH_PATH)/include
 +# -DCOMMON_TIMING_OLD
 +
 +LDFLAGS_P1 = -lz -lm -L$(WM_PROJECT_DIR)/lib/$(WM_OPTIONS)
@@ -157,7 +157,7 @@ index 11daf6b..7e9d747 100644
  LIB			= .a
 diff --git a/src/Make.inc/Makefile.inc.mingw-w32 b/src/Make.inc/Makefile.inc.mingw-w32
 new file mode 100644
-index 0000000..fc8c9cf
+index 0000000..9137017
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.mingw-w32
 @@ -0,0 +1,35 @@
@@ -178,7 +178,7 @@ index 0000000..fc8c9cf
 +CCSS = sh cpscotch_headers.sh mingw32
 +CCP     = $(WM_CC) -m$(WM_ARCH_OPTION)
 +CCD     = $(CCSS)
-+CFLAGS = -O3 -Wall -Dlinux -DNDEBUG -DWIN32 -DLITTLE_ENDIAN -Drestrict=__restrict -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)' -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 -I$(MPI_ARCH_PATH)/include
++CFLAGS = -O3 -Wall -Dlinux -DCOMMON_WINDOWS -DNDEBUG -DWIN32 -DLITTLE_ENDIAN -Drestrict=__restrict -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)' -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 -I$(MPI_ARCH_PATH)/include
 +# -DCOMMON_TIMING_OLD
 +
 +LDFLAGS_P1 = -lz -lm -L$(WM_PROJECT_DIR)/lib/$(WM_OPTIONS)
@@ -198,7 +198,7 @@ index 0000000..fc8c9cf
 +YACC = bison -y
 diff --git a/src/Make.inc/Makefile.inc.mingw-w64 b/src/Make.inc/Makefile.inc.mingw-w64
 new file mode 100644
-index 0000000..8f5238c
+index 0000000..081e451
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.mingw-w64
 @@ -0,0 +1,35 @@
@@ -219,7 +219,7 @@ index 0000000..8f5238c
 +CCSS = sh cpscotch_headers.sh mingw64
 +CCP     = $(WM_CC) -m$(WM_ARCH_OPTION)
 +CCD     = $(CCSS)
-+CFLAGS = -O3 -Wall -Dlinux -DNDEBUG -DWIN64 -DLITTLE_ENDIAN -Drestrict=__restrict -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)' -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 -I$(MPI_ARCH_PATH)/include
++CFLAGS = -O3 -Wall -Dlinux -DCOMMON_WINDOWS -DNDEBUG -DWIN64 -DLITTLE_ENDIAN -Drestrict=__restrict -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)' -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 -I$(MPI_ARCH_PATH)/include
 +# -DCOMMON_TIMING_OLD
 +
 +LDFLAGS_P1 = -lz -lm -L$(WM_PROJECT_DIR)/lib/$(WM_OPTIONS)
@@ -239,7 +239,7 @@ index 0000000..8f5238c
 +YACC = bison -y
 diff --git a/src/Make.inc/Makefile.inc.mingw32 b/src/Make.inc/Makefile.inc.mingw32
 new file mode 100644
-index 0000000..fc8c9cf
+index 0000000..9137017
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.mingw32
 @@ -0,0 +1,35 @@
@@ -260,7 +260,7 @@ index 0000000..fc8c9cf
 +CCSS = sh cpscotch_headers.sh mingw32
 +CCP     = $(WM_CC) -m$(WM_ARCH_OPTION)
 +CCD     = $(CCSS)
-+CFLAGS = -O3 -Wall -Dlinux -DNDEBUG -DWIN32 -DLITTLE_ENDIAN -Drestrict=__restrict -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)' -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 -I$(MPI_ARCH_PATH)/include
++CFLAGS = -O3 -Wall -Dlinux -DCOMMON_WINDOWS -DNDEBUG -DWIN32 -DLITTLE_ENDIAN -Drestrict=__restrict -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)' -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 -I$(MPI_ARCH_PATH)/include
 +# -DCOMMON_TIMING_OLD
 +
 +LDFLAGS_P1 = -lz -lm -L$(WM_PROJECT_DIR)/lib/$(WM_OPTIONS)
@@ -280,7 +280,7 @@ index 0000000..fc8c9cf
 +YACC = bison -y
 diff --git a/src/Make.inc/Makefile.inc.x86_64-w64-mingw32 b/src/Make.inc/Makefile.inc.x86_64-w64-mingw32
 new file mode 100644
-index 0000000..8f5238c
+index 0000000..081e451
 --- /dev/null
 +++ b/src/Make.inc/Makefile.inc.x86_64-w64-mingw32
 @@ -0,0 +1,35 @@
@@ -301,7 +301,7 @@ index 0000000..8f5238c
 +CCSS = sh cpscotch_headers.sh mingw64
 +CCP     = $(WM_CC) -m$(WM_ARCH_OPTION)
 +CCD     = $(CCSS)
-+CFLAGS = -O3 -Wall -Dlinux -DNDEBUG -DWIN64 -DLITTLE_ENDIAN -Drestrict=__restrict -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)' -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 -I$(MPI_ARCH_PATH)/include
++CFLAGS = -O3 -Wall -Dlinux -DCOMMON_WINDOWS -DNDEBUG -DWIN64 -DLITTLE_ENDIAN -Drestrict=__restrict -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)' -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 -I$(MPI_ARCH_PATH)/include
 +# -DCOMMON_TIMING_OLD
 +
 +LDFLAGS_P1 = -lz -lm -L$(WM_PROJECT_DIR)/lib/$(WM_OPTIONS)
