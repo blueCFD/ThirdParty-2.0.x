@@ -80,13 +80,13 @@ unpack_files()
   echo "Unpacking files..."
 
   rm $SRCDIR/*
-  7z x $DownloadRepository/$INSTPACK_FILE -o$SRCDIR/ _*
+  7z x $DownloadRepository/$INSTPACK_FILE -o$SRCDIR/ _* > /dev/null
   cd $SRCDIR
   TOUNPACK=`ls -1A _*`
-  7z x $TOUNPACK
+  7z x $TOUNPACK > /dev/null
   rm $TOUNPACK
   find . -name "_*" | xargs grep 'MPI_INCLUDED' -sl | xargs -I {} mv {} mpi.h
-  find . -name "_*" | xargs grep 'mpich2mpi.pdb' -sl | xargs -I {} mv {} mpich2mpi.dll
+  find . -name "_*" | xargs grep -e 'mpich2mpi\.dll.MPID_Wtick' -sl | xargs -I {} mv {} mpich2mpi.dll
   rm _*
 }
 
@@ -120,7 +120,7 @@ function create_gcccompatible_library
   WM_DLLTOOL=`echo $WM_CC | sed s/gcc/dlltool/`
   cd $BUILDDIR/lib
   pexports -o mpich2mpi.dll > mpich2.def
-  $WM_DLLTOOL -d ../mpich2.def -l libmpi.a -D MPICH2MPI.DLL
+  $WM_DLLTOOL -d mpich2.def -l libmpi.a -D MPICH2MPI.DLL
 }
 
 
@@ -130,6 +130,7 @@ function patch_mpi_includes
   echo -e "\033[1m patching mpi.h \033[0m"
   if [ "$WM_ARCH_OPTION" = "64" ]; then
     cd $BUILDDIR/include
+    grep "typedef __int64 MPI_Aint" mpi.h > /dev/null 2>&1 && \
 echo '--- orig/include/mpi.h  2009-08-06 16:11:46.000000000 +0100
 +++ mod/include/mpi.h 2009-10-12 12:59:08.000000000 +0100
 @@ -331,7 +331,11 @@
