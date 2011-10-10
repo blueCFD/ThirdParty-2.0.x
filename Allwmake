@@ -90,6 +90,14 @@ echo Build MPI libraries if required
 echo
 case "$WM_MPLIB" in
 OPENMPI)
+  if isMinGW; then
+
+    echo "Setup Open-MPI stubs..."
+    # ./genOPENMPIstubs
+    echo "Currently Open-MPI is still not supported by these patches."
+    exit 1
+
+  else
     if [ -r $MPI_ARCH_PATH/lib/libmpi.so ]
     then
         echo "    have $WM_MPLIB shared library ($FOAM_MPI)"
@@ -132,6 +140,7 @@ OPENMPI)
         make distclean
     )
     fi
+  fi
     ;;
 
 MPICH)

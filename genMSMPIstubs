@@ -84,9 +84,9 @@ unpack_files()
   echo "Unpacking files..."
 
   rm $SRCDIR/*
-  7z x $DownloadRepository/$INSTPACK_FILE -o$SRCDIR/ product.cab
+  7z x $DownloadRepository/$INSTPACK_FILE -o$SRCDIR/ product.cab > /dev/null
   cd $SRCDIR
-  7z x product.cab mpi*.h msmpi.dll
+  7z x product.cab mpi*.h msmpi.dll > /dev/null
 
 }
 
