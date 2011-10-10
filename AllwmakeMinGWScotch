@@ -44,6 +44,18 @@ fi
 . etc/tools/ThirdPartyFunctions
 . etc/tools/makeExtraThirdPartyFunctions
 
+if [ -z "$SCOTCH_VERSION" ]; then
+    # get SCOTCH_VERSION, SCOTCH_ARCH_PATH
+    if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config/scotch.sh`
+    then
+        . $settings
+    else
+        echo
+        echo "Error: no config/scotch.sh settings"
+        echo
+    fi
+fi
+
 
 echo ========================================
 echo "Build Scotch decomposition library $SCOTCH_VERSION"
