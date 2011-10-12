@@ -1,3 +1,16 @@
+diff --git a/tecsrc/GLOBAL.h b/tecsrc/GLOBAL.h
+index 21e35a9..217c2e0 100644
+--- a/tecsrc/GLOBAL.h
++++ b/tecsrc/GLOBAL.h
+@@ -573,7 +573,7 @@
+  *             ADD-ON MSWIN IMPORT/EXPORT DEFINITIONS            *
+  *                                                              *
+  ****************************************************************/
+-#if defined MSWIN
++#if defined MSWIN && !defined (__GNUC__)
+ #  define STDCALL __stdcall
+ #else
+ #  define STDCALL
 diff --git a/tecsrc/MASTER.h b/tecsrc/MASTER.h
 index 38c495d..d06c371 100644
 --- a/tecsrc/MASTER.h
@@ -22,7 +35,7 @@ index 38c495d..d06c371 100644
  #endif
  
 diff --git a/tecsrc/TECXXX.h b/tecsrc/TECXXX.h
-index dfcee04..143b771 100644
+index dfcee04..79e8126 100644
 --- a/tecsrc/TECXXX.h
 +++ b/tecsrc/TECXXX.h
 @@ -130,7 +130,7 @@
@@ -43,6 +56,15 @@ index dfcee04..143b771 100644
  #  define DLLEXPORT _declspec (dllexport)
  # else
  #  define DLLEXPORT
+@@ -146,7 +146,7 @@
+ #endif /* DLLEXPORT */
+ 
+ #if !defined (DLLIMPORT)
+-# if defined (MSWIN)
++# if defined (MSWIN) && !defined (__GNUC__)
+ #  define DLLIMPORT _declspec (dllimport)
+ # else
+ #  define DLLIMPORT
 @@ -154,15 +154,15 @@
  #endif /* DLLIMPORT */
  
