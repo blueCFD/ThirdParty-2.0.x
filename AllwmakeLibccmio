@@ -34,7 +34,6 @@
 #     Get and build CD-adapco's ccmio library
 #
 #------------------------------------------------------------------------------
-packageDir=libccmio-`. etc/defaults.sh ; echo \$libccmio_version`
 
 #------------------------------------------------------------------------------
 # run from third-party directory only
@@ -46,6 +45,10 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
     exit 1
 }
 . etc/tools/ThirdPartyFunctions
+#------------------------------------------------------------------------------
+
+packageDir=libccmio-`. etc/defaults.sh ; echo \$libccmio_version`
+
 #------------------------------------------------------------------------------
 
 usage()
