@@ -1,0 +1,4 @@
+openmpi=1.5.3_win32
+openmpi=1.5.3_win64
+openmpi=1.5.4_win32
+openmpi=1.5.4_win64
