@@ -53,7 +53,7 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
 #GNU GCC and company
 GCCVERSION="gcc-4.6.1"
 GMPVERSION="gmp-5.0.2"
-MPFRVERSION="mpfr-3.1.0"
+MPFRVERSION="mpfr-2.4.2"
 MPCVERSION="mpc-0.9"
 BINUTILSVERSION="binutils-2.21"
 
