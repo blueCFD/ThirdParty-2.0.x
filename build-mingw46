@@ -392,7 +392,7 @@ configure_mingw_w64crt()
   cd "$MINGW_W64_BDIR"
   echo "Configuring mingw-w64-crt"
   "$MINGW_W64_HOME/mingw-w64-crt/configure" --prefix=${PREFIX} \
-      --with-sysroot=${PREFIX} \
+      --build=$BUILD --host=$TARGET --with-sysroot=${PREFIX} \
       > ${LOG_FOLDER}/mingw-w64-${WM_COMPILER}_configure.log 2>&1
       # --with-build-sysroot=$PREFIX
   if test $? -ne 0; then
