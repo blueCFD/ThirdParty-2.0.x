@@ -105,11 +105,9 @@ GE_levels()
 
 
 #
-# Echoes the number of folder levels counting from the left that the unpacker
-# should drop. This is (or at least it should be) a prevention mechanism for
-# tar/zipbombs.
+# Unpacks exe/msi formats
 #
-GE_custom_unpack()
+GE_exe_msi_unpack()
 {
   FIQUEI AQUI...
 }

@@ -36,18 +36,20 @@
 #
 #   Predefined functions
 #     GE_showDesc   - shows the description for the calling script.
-#     GE_update     - Does the real update protocol for filling the file defined
-#                     by $versionCacheFile .
+#     GE_update     - Does the real update protocol for filling the file
+#                     defined by $versionCacheFile .
 #     GE_geturl     - Should echo the complete url for the file to be
 #                     downloaded.
-#     GE_getfolder  - Should echo the relative path of the target folder. Usually
-#                     should simply be the name for such folder.
+#     GE_getfolder  - Should echo the relative path of the target folder.
+#                     Usually should simply be the name for such folder.
 #     GE_levels     - Should echo the number of folder levels counting from the
 #                     left, should the unpacker drop. This is a prevention
 #                     mechanism for tar/zipbombs.
 #     GE_update     - Should echo the list of packages to be installed instead
 #                     of this one. This function is only required for combo
 #                     systems.
+#     GE_exe_msi_unpack - Optional function, required mostly for (cross-)
+#                     compiling for Windows.
 #
 #------------------------------------------------------------------------------
 
@@ -360,6 +362,10 @@ GETEM_verifyfile()
      unzip -t download/$FILENAME > /dev/null 2>&1 && VERIFY_STATUS=1
      break
      ;;
+  exe|msi)
+     7z t download/$FILENAME > /dev/null 2>&1 && VERIFY_STATUS=1
+     break
+     ;;
   *)
     GETEM_usage "File extension '$appFileExt' is not recognized for validation."
     ;;
@@ -493,10 +499,10 @@ GETEM_unpackFile()
         ;;
 
       exe|msi)
-        if GETEM_fn_exists GE_getfolder; then
-          GE_custom_unpack "$FILENAME" "$FOLDER" "$LEVELS2KILL"
+        if GETEM_fn_exists GE_exe_msi_unpack; then
+          GE_exe_msi_unpack "$PWD/download/$FILENAME" "$PWD/$FOLDER" "$LEVELS2KILL"
         else
-          GETEM_usage "Function 'GE_custom_unpack' is missing."
+          GETEM_usage "Function 'GE_exe_msi_unpack' is missing."
         fi
         break
         ;;
