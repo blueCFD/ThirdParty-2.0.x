@@ -57,7 +57,8 @@ getTrueVersionOnCache()
   if [ $countversions -eq 1 ]; then
     grep $1 ${versionCacheFile}_fullversion | sed -e 's/.*=//'
   elif [ $countversions -gt 1 -a "`getMinorVersion $1`" = "$1" ]; then
-    grep $1 ${versionCacheFile}_fullversion | grep -e "win$WM_ARCH_OPTION" | sort -u | tail -n 1
+    grep $1 ${versionCacheFile}_fullversion | grep -e "win$WM_ARCH_OPTION" | \
+      sed -e 's/.*=//' | sort -u | tail -n 1
   else
     echo "Version not available on cache"
   fi
