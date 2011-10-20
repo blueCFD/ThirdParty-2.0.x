@@ -53,11 +53,11 @@ getMinorVersion()
 #
 getTrueVersionOnCache()
 {
-  countversions=`grep $1 $versionCacheFile | wc -l`
+  countversions=`grep $1 ${versionCacheFile}_fullversion | wc -l`
   if [ $countversions -eq 1 ]; then
-    grep $1 $versionCacheFile | sed -e '/.*=//'
+    grep $1 ${versionCacheFile}_fullversion | sed -e 's/.*=//'
   elif [ $countversions -gt 1 -a "`getMinorVersion $1`" = "$1" ]; then
-    grep $1 $versionCacheFile | grep -e "win$WM_ARCH_OPTION" | sort -u | tail -n 1
+    grep $1 ${versionCacheFile}_fullversion | grep -e "win$WM_ARCH_OPTION" | sort -u | tail -n 1
   else
     echo "Version not available on cache"
   fi
@@ -92,8 +92,13 @@ GE_update()
     wget "$1ompi/v$mjv/" -O $testFile > /dev/null 2>&1
     grep -e "OpenMPI_v[0-9][\.0-9\-]*_win[3264]*\.$appFileExt" $testFile | \
       sed -e 's=.*>\(OpenMPI_.*\)\.'$appFileExt'<.*=\1=' -e 's/_v/=/' \
-          -e 's=OpenMPI=openmpi-win=' | \
-      sort -u >> $versionCacheFile
+          -e 's=OpenMPI=openmpi-win=' -e 's=\-[0-9]*_win[3264]*==' | \
+      sort -u >> ${versionCacheFile}
+
+    grep -e "OpenMPI_v[0-9][\.0-9\-]*_win[3264]*\.$appFileExt" $testFile | \
+      sed -e 's=.*>\(OpenMPI_.*\)\.'$appFileExt'<.*=\1=' -e 's/_v/=/' \
+          -e 's=OpenMPI=openmpi-win=' -e 's=\-[0-9]*.*==' | \
+      sort -u >> ${versionCacheFile}_fullversion
   done
 
   rm $testFile
