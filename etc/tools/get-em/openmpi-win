@@ -120,6 +120,16 @@ GE_geturl()
 
 
 #
+# Echoes the name for the package file for storage. Receives the real version $1.
+#
+GE_getfilename()
+{
+  TRUE_DOWN_VERSION=`getTrueVersionOnCache $1`
+  echo OpenMPI_v${TRUE_DOWN_VERSION}.${appFileExt}
+}
+
+
+#
 # Echoes the relative path of the target folder. Receives the real version $1.
 #
 GE_getfolder()

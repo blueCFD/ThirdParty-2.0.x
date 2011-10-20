@@ -46,6 +46,8 @@
 #                     downloaded.
 #     GE_getfolder  - Should echo the relative path of the target folder.
 #                     Usually should simply be the name for such folder.
+#     GE_getfilename- Optional function, Required only for special filenaming
+#                     scenarios.
 #     GE_levels     - Should echo the number of folder levels counting from the
 #                     left, should the unpacker drop. This is a prevention
 #                     mechanism for tar/zipbombs.
@@ -336,7 +338,11 @@ GETEM_getversion()
 GETEM_getfilename()
 {
   [ "$#" -lt 1 ] && GETEM_usage "Missing VERSION for filename retrieval."
-  echo $appName-$1.$appFileExt
+  if GETEM_fn_exists GE_getfilename; then
+    GE_getfilename $1
+  else
+    echo $appName-$1.$appFileExt
+  fi
 }
 
 
