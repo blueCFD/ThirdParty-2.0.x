@@ -43,7 +43,7 @@ getMajorVersion()
 #
 GE_showDesc()
 {
-  echo "openmpi - Retrieve Open MPI installers for Windows. Size: 3 to 8MB"
+  echo "openmpi-win - Retrieve Open MPI installers for Windows and unpack to the respective platform folder. Size: 3 to 5MB"
 }
 
 
