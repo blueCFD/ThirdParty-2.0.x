@@ -2,7 +2,7 @@
 #------------------------------------------------------------------------------
 # License
 #
-#     This file is part of the branch "get-em" available here:
+#     This file is based on the branch "get-em" available here:
 #         https://github.com/wyldckat/ThirdParty-2.0.x/commits/get-em
 #
 #     These modifications have not been endorsed by OpenCFD Ltd, SGI corp nor
@@ -39,6 +39,32 @@ getMajorVersion()
 
 
 #
+# Shows the major+patch version based on the whole version.
+#
+getMinorVersion()
+{
+  echo $1 | sed -e 's=\(^[0-9]\.[0-9]\.[0-9]\).*=\1='
+}
+
+
+#
+# Shows the cached full version based on the provided version, just in case the
+# given version is incomplete.
+#
+getTrueVersionOnCache()
+{
+  countversions=`grep $1 $versionCacheFile | wc -l`
+  if [ $countversions -eq 1 ]; then
+    grep $1 $versionCacheFile | sed -e '/.*=//'
+  elif [ $countversions -gt 1 -a "`getMinorVersion $1`" = "$1" ]; then
+    grep $1 $versionCacheFile | grep -e "win$WM_ARCH_OPTION" | sort -u | tail -n 1
+  else
+    echo "Version not available on cache"
+  fi
+}
+
+
+#
 # Shows the description for this application.
 #
 GE_showDesc()
@@ -53,7 +79,7 @@ GE_showDesc()
 #
 GE_update()
 {
-  #first check available major versions (>=2.6)
+  #first check available major versions (>=1.5)
   wget "$1" -O $testFile > /dev/null 2>&1
   LIST_MAJOR_VERSIONS=`grep -e 'v[0-9]\.[0-9]/"' $testFile | \
     sed -e 's=.*ompi/v\(.*\)/".*=\1=' | \
@@ -64,8 +90,9 @@ GE_update()
   #now cycle through the major versions and list the available minor versions
   for mjv in $LIST_MAJOR_VERSIONS; do
     wget "$1ompi/v$mjv/" -O $testFile > /dev/null 2>&1
-    grep -e "openmpi-[0-9][\.0-9\-]*_win[3264]\.$appFileExt" $testFile | \
-      sed -e 's=.*>\(openmpi-.*\)\.'$appFileExt'<.*=\1=' -e 's_-_=_' | \
+    grep -e "OpenMPI_v[0-9][\.0-9\-]*_win[3264]*\.$appFileExt" $testFile | \
+      sed -e 's=.*>\(OpenMPI_.*\)\.'$appFileExt'<.*=\1=' -e 's/_v/=/' \
+          -e 's=OpenMPI=openmpi-win=' \
       sort -u >> $versionCacheFile
   done
 
@@ -80,7 +107,8 @@ GE_update()
 GE_geturl()
 {
   MAJORVERSION=`getMajorVersion $2`
-  echo ${1}ompi/v$MAJORVERSION/downloads/openmpi-$2.$appFileExt
+  TRUE_DOWN_VERSION=`getTrueVersionOnCache $2`
+  echo ${1}ompi/v${MAJORVERSION}/downloads/OpenMPI-v${TRUE_DOWN_VERSION}.${appFileExt}
 }
 
 
@@ -89,7 +117,8 @@ GE_geturl()
 #
 GE_getfolder()
 {
-  echo platforms/$WM_ARCH$WM_COMPILER/openmpi-$1
+  MAJORMINORversion=`getMinorVersion $1`
+  echo platforms/$WM_ARCH$WM_COMPILER/openmpi-$MAJORMINORversion
 }
 
 

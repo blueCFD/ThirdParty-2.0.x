@@ -1,8 +1,12 @@
 #---------------------------------*- sh -*-------------------------------------
 # License
 #
-#     This file is part of the branch "get-em" available here:
+#     This file is based on the branch "get-em" available here:
 #         https://github.com/wyldckat/ThirdParty-2.0.x/commits/get-em
+#
+#     Modifications were made to be part of blueCAPE's unofficial mingw patches
+#   for OpenFOAM. For more information about these patches, visit:
+#         http://www.bluecape.com.pt/blueCFD
 #
 #     These modifications have not been endorsed by OpenCFD Ltd, SGI corp nor
 #   the OpenFOAM Foundation.
