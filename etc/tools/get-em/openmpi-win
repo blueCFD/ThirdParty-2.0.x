@@ -108,7 +108,7 @@ GE_geturl()
 {
   MAJORVERSION=`getMajorVersion $2`
   TRUE_DOWN_VERSION=`getTrueVersionOnCache $2`
-  echo ${1}ompi/v${MAJORVERSION}/downloads/OpenMPI-v${TRUE_DOWN_VERSION}.${appFileExt}
+  echo ${1}ompi/v${MAJORVERSION}/downloads/OpenMPI_v${TRUE_DOWN_VERSION}.${appFileExt}
 }
 
 
