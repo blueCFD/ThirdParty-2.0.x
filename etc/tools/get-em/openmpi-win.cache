@@ -1,4 +1,6 @@
-openmpi=1.5.3_win32
-openmpi=1.5.3_win64
-openmpi=1.5.4_win32
-openmpi=1.5.4_win64
+openmpi-win=1.5.2-2_win32
+openmpi-win=1.5.2-2_win64
+openmpi-win=1.5.3-2_win32
+openmpi-win=1.5.3-2_win64
+openmpi-win=1.5.4-1_win32
+openmpi-win=1.5.4-1_win64
