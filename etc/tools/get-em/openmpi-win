@@ -106,10 +106,15 @@ GE_levels()
 
 #
 # Unpacks exe/msi formats
+# Inputs: /full/path/to/package /futh/path/to/target/folder result_from_GE_levels
 #
 GE_exe_msi_unpack()
 {
-  FIQUEI AQUI...
+  mkdir "$testFile" && \
+    7z x "$1" -o"$testFile" && \
+    mkdir -p $FOLDER > /dev/null 2>&1  && \
+    mv "$testFile"/\$_OUTDIR/* "$FOLDER/"
+  [ -n "$testFile" -a -d "$testFile" ] && rm -rf "$testFile"
 }
 
 
