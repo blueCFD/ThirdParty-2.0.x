@@ -86,6 +86,7 @@ GE_update()
     grep -v -e "^1\.[0-4]" | \
     sort -u`
   [ -r "$versionCacheFile" ] && rm $versionCacheFile
+  [ -r "${versionCacheFile}_fullversion" ] && rm ${versionCacheFile}_fullversion
 
   #now cycle through the major versions and list the available minor versions
   for mjv in $LIST_MAJOR_VERSIONS; do
