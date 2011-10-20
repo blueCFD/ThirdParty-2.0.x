@@ -92,7 +92,7 @@ GE_update()
     wget "$1ompi/v$mjv/" -O $testFile > /dev/null 2>&1
     grep -e "OpenMPI_v[0-9][\.0-9\-]*_win[3264]*\.$appFileExt" $testFile | \
       sed -e 's=.*>\(OpenMPI_.*\)\.'$appFileExt'<.*=\1=' -e 's/_v/=/' \
-          -e 's=OpenMPI=openmpi-win=' \
+          -e 's=OpenMPI=openmpi-win=' | \
       sort -u >> $versionCacheFile
   done
 
