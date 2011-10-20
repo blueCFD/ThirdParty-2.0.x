@@ -479,13 +479,13 @@ GETEM_unpackFile()
         case $appFileExt in
         tar.gz)
           mkdir -p "$FOLDER" && \
-            tar -xzf download/$FILENAME -C "$FOLDER" $TAR_STRIP_OPTION
+            tar -xzf download/$FILENAME -C "$FOLDER" $TAR_STRIP_OPTION 1>/dev/null
           [ -z "$TAR_STRIP_OPTION" ] && GETEM_moveFilesIntoPlace "$FOLDER" $LEVELS2KILL
           break
           ;;
         tar.bz2)
           mkdir -p "$FOLDER" && \
-            tar -xjf download/$FILENAME -C "$FOLDER" $TAR_STRIP_OPTION
+            tar -xjf download/$FILENAME -C "$FOLDER" $TAR_STRIP_OPTION 1>/dev/null
           [ -z "$TAR_STRIP_OPTION" ] && GETEM_moveFilesIntoPlace "$FOLDER" $LEVELS2KILL
           break
           ;;
@@ -501,7 +501,7 @@ GETEM_unpackFile()
         done
 
         mkdir "$testFile" && \
-          unzip "download/$FILENAME" -d "$testFile" && \
+          unzip "download/$FILENAME" -d "$testFile" 1>/dev/null && \
           mkdir -p $FOLDER > /dev/null 2>&1  && \
           mv "$testFile"/$LEVEL2KILL_STR "$FOLDER/"
         [ -n "$testFile" -a -d "$testFile" ] && rm -rf "$testFile"
