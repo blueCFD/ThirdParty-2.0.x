@@ -93,9 +93,7 @@ OPENMPI)
   if isMinGW; then
 
     echo "Setup Open-MPI stubs..."
-    # ./genOPENMPIstubs
-    echo "Currently Open-MPI is still not supported by these patches."
-    exit 1
+    ./genOPENMPIstubs
 
   else
     if [ -r $MPI_ARCH_PATH/lib/libmpi.so ]
