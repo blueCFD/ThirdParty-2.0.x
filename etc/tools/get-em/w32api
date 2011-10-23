@@ -15,7 +15,7 @@
 #   trademarked by and Copyright (C) OpenFOAM Foundation.
 #
 # File
-#     etc/tools/get-em/mingwrt
+#     etc/tools/get-em/w32api
 #
 # Description
 #     This script will gather the necessary information about the application.
@@ -23,10 +23,19 @@
 #
 #------------------------------------------------------------------------------
 
-versionVar="mingw32rt_version"
-appName="mingwrt"
+versionVar="w32api_version"
+appName="w32api"
 appDefaultSep="-"
-appFileExt="tar.gz"
+appFileExt="tar.lzma"
+
+
+#
+# Shows the major version based on the whole version.
+#
+getMajorVersion()
+{
+  echo $1 | sed -e 's=\(^[0-9]\.[0-9]\).*=\1='
+}
 
 
 #
@@ -34,7 +43,7 @@ appFileExt="tar.gz"
 #
 GE_showDesc()
 {
-  echo "mingwrt - Retrieve the MinGW-RT package. Size: 500kB to 1MB"
+  echo "w32api - Retrieve the W32API from MinGW package. Size: 900kB to 1.2MB"
 }
 
 
@@ -45,9 +54,20 @@ GE_showDesc()
 GE_update()
 {
   wget "$1" -O $testFile > /dev/null 2>&1
-  grep -e '/'$appName'-[0-9]\.[0-9\.]*/' $testFile | \
-    sed -e 's=.*/\('$appName'-[0-9]\.[0-9\.]*\)/.*=\1=' -e 's_-_=_' | \
-    sort -u > $versionCacheFile
+  LIST_MAJOR_VERSIONS=`grep -e '/'$appName'-[0-9]\.[0-9\.]*/' $testFile | \
+    sed -e 's=.*/\('$appName'-[0-9]\.[0-9\.]*\)/.*=\1=' -e 's_'$appName'-__' | \
+    sort -u`
+  [ -r "$versionCacheFile" ] && rm $versionCacheFile
+
+  #now cycle through the major versions and list the available minor versions
+  for mjv in $LIST_MAJOR_VERSIONS; do
+    wget "$1$appName-$mjv/" -O $testFile > /dev/null 2>&1
+    grep -e '/'$appName'-[0-9]\.[0-9\.-]*mingw32' $testFile | \
+      sed -e 's=.*/\('$appName'-[0-9]\.[0-9\.\-]*\)mingw32.*=\1=' \
+          -e 's_api-_api=_' -e 's_-$__' | \
+      sort -u >> $versionCacheFile
+  done
+
   rm $testFile
 }
 
@@ -58,7 +78,8 @@ GE_update()
 #
 GE_geturl()
 {
-  echo ${1}$appName-${2}/$appName-$2-mingw32-dev.$appFileExt
+  MAJORVERSION=`getMajorVersion $2`
+  echo ${1}$appName-$MAJORVERSION/$appName-$2-mingw32-dev.$appFileExt
 }
 
 
