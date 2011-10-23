@@ -30,8 +30,8 @@
 #     Build script for Binutils
 #
 #------------------------------------------------------------------------------
-binutilsPACKAGE=`. etc/defaults.sh ; echo binutils-\$binutils_version`
-gccPACKAGE=`. etc/defaults.sh ; echo gcc-\$gcc_version`
+binutilsPACKAGE=`. etc/defaults.sh ; echo \$binutils_version`
+gccPACKAGE=`. etc/defaults.sh ; echo \$gcc_version`
 
 #------------------------------------------------------------------------------
 # run from third-party directory only
