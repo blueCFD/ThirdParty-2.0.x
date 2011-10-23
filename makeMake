@@ -1,26 +1,27 @@
 #!/bin/sh
 #------------------------------------------------------------------------------
-# =========                 |
-# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-#  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
-#    \\/     M anipulation  |
-#------------------------------------------------------------------------------
 # License
-#     This file is part of OpenFOAM.
+#    This file is part of blueCAPE's unofficial mingw patches for OpenFOAM.
+#    For more information about these patches, visit:
+#         http://www.bluecape.com.pt/blueCFD
 #
-#     OpenFOAM is free software: you can redistribute it and/or modify it
-#     under the terms of the GNU General Public License as published by
-#     the Free Software Foundation, either version 3 of the License, or
-#     (at your option) any later version.
+#    It's based on the file with the same name available here:
+#         https://github.com/wyldckat/ThirdParty-2.0.x/tree/binutils
 #
-#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
-#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-#     for more details.
+#    OpenFOAM's official site: http://www.openfoam.com
 #
-#     You should have received a copy of the GNU General Public License
-#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#    OpenFOAM is free software: you can redistribute it and/or modify it
+#    under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#    for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
 #     makeMake
@@ -29,8 +30,8 @@
 #     Build script for Make
 #
 #------------------------------------------------------------------------------
-makePACKAGE=make-3.82
-gccPACKAGE=gcc-4.5.1
+makePACKAGE=`. etc/defaults.sh ; echo make-\$make_version`
+gccPACKAGE=`. etc/defaults.sh ; echo gcc-\$gcc_version`
 
 #------------------------------------------------------------------------------
 # run from third-party directory only
