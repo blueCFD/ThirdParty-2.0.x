@@ -47,12 +47,12 @@ GE_showDesc()
 GE_update()
 {
   wget "${1}" -O $testFile > /dev/null 2>&1
-  grep -e 'flex-[0-9\.]*'$appFileExt $testFile | \
+  grep -e 'flex-[0-9\.a]*'$appFileExt $testFile | \
     sed -e 's=.*\(flex-[0-9\.a]*\).'$appFileExt'.*=\1=' -e 's_-_=_' | \
     sort -u > ${versionCacheFile}
 
-  grep -e 'flex-[0-9.]*'$appFileExt $testFile | \
-    sed -e 's_.*href="\(.*flex-[0-9\.a]\.*'$appFileExt'?download\).*_\1_' | \
+  grep -e 'flex-[0-9.a]*'$appFileExt $testFile | \
+    sed -e 's_.*\(http.*flex\-[0-9\.a].*.download\).*_\1_' | \
     sort -u > ${versionCacheFile}_urls
 
   rm $testFile
