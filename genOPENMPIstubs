@@ -49,7 +49,6 @@ export PATH=$PATH:$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER$WM_COMPILER
 
 #end of initializations -------------------------------------------
 
-
 must_build_pexports()
 {
   cd $WM_THIRD_PARTY_DIR
@@ -57,7 +56,7 @@ must_build_pexports()
 }
 
 
-function create_gcccompatible_library
+create_gcccompatible_library()
 {
   echo -e "\033[1m creating libmpi.a \033[0m"
   WM_DLLTOOL=`echo $WM_CC | sed s/gcc/dlltool/`
@@ -68,6 +67,7 @@ function create_gcccompatible_library
 
 
 #script start ------------------------------------------------------
+
 if [ ! -e "$MPI_ARCH_PATH/bin/libmpi.dll" ]; then
   ./get-em so openmpi-win=default || {
     echo "Unable to retrieve and unpack necessary files for Open-MPI."

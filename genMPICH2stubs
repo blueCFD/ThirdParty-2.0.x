@@ -29,20 +29,6 @@
 #
 #------------------------------------------------------------------------------
 
-#set up variables
-MPIVERSION=`echo $FOAM_MPI | sed 's=mpich2\-=='`
-INSTPACK_URL="http://www.mcs.anl.gov/research/projects/mpich2/downloads/tarballs/$MPIVERSION"
-INSTPACK_X86="$FOAM_MPI-win-ia32.msi"
-INSTPACK_X86_64="$FOAM_MPI-win-x86-64.msi"
-
-if [ "x$WM_ARCH_OPTION" = "x64" ]; then
-  INSTPACK_FILE=$INSTPACK_X86_64
-else
-  INSTPACK_FILE=$INSTPACK_X86
-fi
-
-export PATH=$PATH:$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER$WM_COMPILER_ARCH/pexports-0.44-1/bin
-
 if ! isMinGW; then
   echo "Error: this script is meant to be used for MinGW compilers only!"
   exit 1
@@ -59,39 +45,9 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
 . etc/tools/ThirdPartyFunctions
 . etc/tools/makeExtraThirdPartyFunctions
 
+export PATH=$PATH:$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER$WM_COMPILER_ARCH/pexports-0.44-1/bin
 
 #end of initializations -------------------------------------------
-
-
-download_files()
-{
-  # Make sure wget is installed
-  if test "x`which wget`" = "x" ; then
-    echo "You need to install wget."
-    exit 1
-  fi
-
-  downloadFile $INSTPACK_FILE $INSTPACK_URL/$INSTPACK_FILE
-}
-
-
-unpack_files()
-{
-  echo "Unpacking files..."
-
-  rm $SRCDIR/*
-  7z x $DownloadRepository/$INSTPACK_FILE -o$SRCDIR/ _* > /dev/null
-  cd $SRCDIR
-  TOUNPACK=`ls -1A _*`
-  7z x $TOUNPACK > /dev/null
-  rm $TOUNPACK
-  find . -name "_*" | xargs grep 'MPI_INCLUDED' -sl | xargs -I {} mv {} mpi.h
-  find . -name "_*" | xargs grep 'MPIO_INCLUDE' -sl | xargs -I {} mv {} mpio.h
-  find . -name "_*" | xargs grep 'MPICH_IGNORE_CXX_SEEK' -sl | xargs -I {} mv {} mpicxx.h
-  find . -name "_*" | xargs grep -e 'mpich2mpi\.dll.MPID_Wtick' -sl | xargs -I {} mv {} mpich2mpi.dll
-  rm _*
-}
-
 
 must_build_pexports()
 {
@@ -100,33 +56,17 @@ must_build_pexports()
 }
 
 
-function copy_and_link_mpich2
-{
-  cd "$BUILDDIR"
-
-  echo -e "\033[1m Purging installed mpich2 \033[0m"
-  rm -rf *
-  
-  echo -e "\033[1m copying necessary files \033[0m"
-  mkdir bin
-  mkdir lib
-  mkdir include
-  cp $SRCDIR/*.dll lib/
-  cp $SRCDIR/*.h include/
-}
-
-
-function create_gcccompatible_library
+create_gcccompatible_library()
 {
   echo -e "\033[1m creating libmpi.a \033[0m"
   WM_DLLTOOL=`echo $WM_CC | sed s/gcc/dlltool/`
-  cd $BUILDDIR/lib
+  cd $MPI_ARCH_PATH/lib
   pexports -o mpich2mpi.dll > mpich2.def
   $WM_DLLTOOL -d mpich2.def -l libmpi.a -D MPICH2MPI.DLL
 }
 
 
-function patch_mpi_includes
+patch_mpi_includes()
 {
 
   echo -e "\033[1m patching mpi.h \033[0m"
@@ -153,64 +93,26 @@ echo '--- orig/include/mpi.h  2009-08-06 16:11:46.000000000 +0100
 }
 
 
-function cleanup
-{
-  if [ -n "$BUILDDIR" -a -e "$BUILDDIR" ]; then
-    rm -rf "$BUILDDIR"
-  fi
-}
-
-
-
 #script start ------------------------------------------------------
 
-BUILDDIR="$MPI_ARCH_PATH"
-SRCDIR="$MPI_HOME/source"
-
-if [ $# -eq 1 -a "$1" = "clean" ]; then
-
-  echo -e "\033[1m Cleaning up MPICH2 stub... \033[0m"
-  cleanup
-
-else
-
-  if test -z "x`which 7z`" ; then
-    echo "Please install 7zip. In Ubuntu, the package name is p7zip-full."
-    echo "If 7zip isn't available for your Linux distribution, please go to www.7zip.org to download the generic version."
+if [ ! -e "$MPI_ARCH_PATH/lib/mpich2mpi.dll" ]; then
+  ./get-em so mpich2-win=default || {
+    echo "Unable to retrieve and unpack necessary files for MPICH2."
     exit 1
+  }
+fi
+
+if [ ! -e "$MPI_ARCH_PATH/lib/libmpi.a" ]; then
+
+  if test "x`which pexports`" = "x" ; then
+    must_build_pexports
   fi
 
-  mkdir -p "$BUILDDIR"
-  if [ ! -d "$SRCDIR" ]; then mkdir -p "$SRCDIR"; fi
+  echo -e "\033[1m Generating MPICH2 stub... \033[0m"
 
-  if [ -d "$SRCDIR" ]; then
-
-    if [ ! -e "$BUILDDIR/lib/libmpi.a" ]; then
-
-      echo -e "\033[1m Downloading necessary MPICH2 installation files...\033[0m"
-      download_files
-
-      echo -e "\033[1m Unpacking necessary MPICH2 installation files...\033[0m"
-      unpack_files
-
-      if test "x`which pexports`" = "x" ; then
-        must_build_pexports
-      fi
-
-      echo -e "\033[1m Generating MPICH2 stub... \033[0m"
-
-      copy_and_link_mpich2
-      create_gcccompatible_library
-      patch_mpi_includes
-      echo -e "\033[1m All done. \033[0m"
-    else
-      echo -e "\033[1m MPICH2 stub is already built and ready to use. \033[0m"
-    fi
-
-  else
-    echo -e "\033[1m Failed to complete, due to lack of folder $SRCDIR \033[0m"
-  fi
-
-  cd $WM_THIRD_PARTY_DIR
-
+  create_gcccompatible_library
+  patch_mpi_includes
+  echo -e "\033[1m All done. \033[0m"
+else
+  echo -e "\033[1m MPICH2 stub is already built and ready to use. \033[0m"
 fi
