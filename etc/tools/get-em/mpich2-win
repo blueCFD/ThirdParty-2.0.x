@@ -107,6 +107,7 @@ GE_exe_msi_unpack()
 {
   mkdir "$testFile" > /dev/null 2>&1 && \
   mkdir -p $FOLDER/{bin,lib,include} > /dev/null 2>&1 && {
+    FOLDER=${WM_THIRD_PARTY_DIR}/${FOLDER}
     7z x "$1" -o"$testFile"/ _* > /dev/null
     cd $testFile
     TOUNPACK=`ls -1A _*`
@@ -118,6 +119,7 @@ GE_exe_msi_unpack()
     find . -name "_*" | xargs grep 'MPICH_IGNORE_CXX_SEEK' -sl | xargs -I {} mv {} $FOLDER/include/mpicxx.h
     find . -name "_*" | xargs grep -e 'mpich2mpi\.dll.MPID_Wtick' -sl | xargs -I {} mv {} $FOLDER/lib/mpich2mpi.dll
     rm _*
+    cd ${WM_THIRD_PARTY_DIR}
   }
   [ -n "$testFile" -a -d "$testFile" ] && rm -rf "$testFile"
 }
