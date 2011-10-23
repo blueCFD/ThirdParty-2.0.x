@@ -65,7 +65,7 @@ GE_update()
     grep -e '/'$appName'-[0-9]\.[0-9\.-]*mingw32' $testFile | \
       sed -e 's=.*/\('$appName'-[0-9]\.[0-9\.\-]*\)mingw32.*=\1=' \
           -e 's_api-_api=_' -e 's_-$__' | \
-      grep -v -e $appName'-3\.1[0-4]' | \
+      grep -v -e $appName'=3\.1[0-4]' | \
       sort -u >> $versionCacheFile
   done
 
