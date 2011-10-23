@@ -21,10 +21,10 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     build-mingw45
+#     makeMinGWGcc
 #
 # Description
-#     Build script for mingw with gcc 4.5.x. It works with mingw32, mingw-w32
+#     Build script for mingw with gcc 4.x.y. It works with mingw32, mingw-w32
 #   and mingw-w64.
 #   This build script was originally based on the build script available at
 #     http://www.symscape.com/files/articles/openfoam-windows/build-mingw
@@ -51,16 +51,16 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
 #-----------------------------------------------------
 
 #GNU GCC and company
-GCCVERSION="gcc-4.5.3"
-GMPVERSION="gmp-4.3.2"
-MPFRVERSION="mpfr-2.4.2"
-MPCVERSION="mpc-0.8.2"
-BINUTILSVERSION="binutils-2.21"
+GCCVERSION=`. etc/defaults.sh ; echo \$gcc_version`
+GMPVERSION=`. etc/defaults.sh ; echo \$gmp_version`
+MPFRVERSION=`. etc/defaults.sh ; echo \$mpfr_version`
+MPCVERSION=`. etc/defaults.sh ; echo \$mpc_version`
+BINUTILSVERSION=`. etc/defaults.sh ; echo \$binutils_version`
 
 #MinGW versions
-MINGW32RTVERSION="mingwrt-3.18"
-W32APIVERSION="w32api-3.14"
-MINGW_W64_VERSION="1.x" #1.x or 2.x
+MINGW32RTVERSION=`. etc/defaults.sh ; echo \$mingw32rt_version`
+W32APIVERSION=`. etc/defaults.sh ; echo \$w32api_version`
+MINGW_W64_VERSION=`. etc/defaults.sh ; echo \$mingw_w64_version`
 
 #LOG FOLDER
 LOG_FOLDER="$WM_THIRD_PARTY_DIR/../buildLogs"
@@ -108,30 +108,10 @@ BINUTILS_HOME="$WM_THIRD_PARTY_DIR/$BINUTILSVERSION"
 MINGW32RT_HOME="$WM_THIRD_PARTY_DIR/$MINGW32RTVERSION"
 W32API_HOME="$WM_THIRD_PARTY_DIR/$W32APIVERSION"
 
-MINGW_W64_HOME="$WM_THIRD_PARTY_DIR/mingw-w64-crt"
+MINGW_W64_HOME="$WM_THIRD_PARTY_DIR/mingw-w64-crt-$MINGW_W64_VERSION"
 
 PREFIX="$WM_COMPILER_DIR"
 PURGE=""
-
-if [ -d "$PREFIX" ]; then
-  echo "It seems that there is already an existing mingw cross-compiler installed."
-  echo "Do you wish to remove it and update it to the latest available version? (yes or no)"
-  read answer
-  case $answer in
-      yes | y | Y | Yes | YES)
-        rm -rf "$PREFIX"
-        PURGE="Y"
-        ;;
-      *)
-        echo "Installation aborted."
-        exit 1
-        ;;
-  esac
-fi
-
-if [ -d "$buildBASE" ]; then
-  rm -rf "$buildBASE"
-fi
 
 #make sure the log folder exists and expand its path
 if [ ! -d "$LOG_FOLDER" ]; then
@@ -145,44 +125,10 @@ BINUTILS_BDIR="$buildBASE/$BINUTILSVERSION"
 MINGW32RT_BDIR="$buildBASE/$MINGW32RTVERSION"
 W32API_BDIR="$buildBASE/$W32APIVERSION"
 
-MINGW_W64_BDIR="$buildBASE/mingw-w64-crt"
-
-
-#set architecture bits
-ABI=$WM_ARCH_OPTION
-
-
-#define files to download and respective URLS
-GCC_TARFILE="${GCCVERSION}.tar.bz2"
-GMP_TARFILE="${GMPVERSION}.tar.bz2"
-MPFR_TARFILE="${MPFRVERSION}.tar.bz2"
-MPC_TARFILE="${MPCVERSION}.tar.gz"
-BINUTILS_TARFILE="${BINUTILSVERSION}.tar.bz2"
-
-MINGW64_TARFILE="mingw-w64-v${MINGW_W64_VERSION}.tar.gz"
-
-#MinGW versions
-MINGW32RT_TARFILE="${MINGW32RTVERSION}-mingw32-dev.tar.gz"
-W32API_TARFILE="${W32APIVERSION}-mingw32-dev.tar.gz"
-
-
-GNU_URL="ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/${GCCVERSION}/${GCC_TARFILE}"
-GMP_URL="ftp://ftp.gnu.org/gnu/gmp/${GMP_TARFILE}"
-MPFR_URL="ftp://ftp.gnu.org/gnu/mpfr/${MPFR_TARFILE}"
-MPC_URL="http://www.multiprecision.org/mpc/download/${MPC_TARFILE}"
-BINUTILS_URL="ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/binutils/releases/${BINUTILS_TARFILE}"
-
-MINGW64_URL="http://mingw-w64.svn.sourceforge.net/viewvc/mingw-w64/stable/v${MINGW_W64_VERSION}/?view=tar"
-
-#MinGW versions
-MINGW32RT_URL="http://downloads.sourceforge.net/project/mingw/MinGW/BaseSystem/RuntimeLibrary/MinGW-RT/${MINGW32RTVERSION}/${MINGW32RT_TARFILE}?use_mirror=mesh"
-W32API_URL="http://downloads.sourceforge.net/project/mingw/MinGW/BaseSystem/RuntimeLibrary/Win32-API/${W32APIVERSION}/${W32API_TARFILE}?use_mirror=mesh"
+MINGW_W64_BDIR="$buildBASE/mingw-w64-crt-$MINGW_W64_VERSION"
 
 
 # Make sure these are initialized as we want them
-
-GCC_CORE=""
-BINUTILS=""
 GCC_LANGS="c,c++"
 
 
@@ -194,93 +140,6 @@ GCC_LANGS="c,c++"
 #-----------------------------------------------------
 
 
-download_files()
-{
-  # Make sure wget is installed
-  if test "x`which wget`" = "x" ; then
-    echo "You need to install wget."
-    exit 1
-  fi
-
-  downloadFile $GCC_TARFILE $GNU_URL
-  downloadFile $GMP_TARFILE $GMP_URL
-  downloadFile $MPFR_TARFILE $MPFR_URL
-  downloadFile $MPC_TARFILE $MPC_URL
-  downloadFile $BINUTILS_TARFILE $BINUTILS_URL
-
-  case $WM_COMPILER in
-  mingw32)
-    downloadFile $MINGW32RT_TARFILE $MINGW32RT_URL
-    downloadFile $W32API_TARFILE $W32API_URL
-    ;;
-  mingw-w32 | mingw-w64)
-    downloadFile $MINGW64_TARFILE $MINGW64_URL
-    if [ -e "$DownloadRepository/index.html?view=tar" ]; then
-      mv $DownloadRepository/"index.html?view=tar" $DownloadRepository/$MINGW64_TARFILE
-    fi
-    ;;
-  esac
-}
-
-
-purge_folder()
-{
-  if [ -d "$1" ]; then
-    rm -rf "$1"
-  fi
-}
-
-
-purge_homes()
-{
-  purge_folder "$GCC_HOME"
-  purge_folder "$GMP_HOME"
-  purge_folder "$MPFR_HOME"
-  purge_folder "$MPC_HOME"
-  purge_folder "$BINUTILS_HOME"
-
-  case $WM_COMPILER in
-  mingw32)
-    purge_folder "$MINGW32RT_HOME"
-    purge_folder "$W32API_HOME"
-    ;;
-  mingw-w32 | mingw-w64)
-    purge_folder "$MINGW_W64_HOME"
-    ;;
-  esac
-}
-
-
-unpack_files()
-{
-  echo "Unpacking files..."
-
-  if [ "x$PURGE" != "x" ]; then
-    purge_homes
-  fi
-
-  unpackFile $GCC_TARFILE
-  unpackFile $GMP_TARFILE
-  unpackFile $MPFR_TARFILE
-  unpackFile $MPC_TARFILE
-  unpackFile $BINUTILS_TARFILE
-
-  #fix links for GMP and MPFR
-  do_links_GM
-
-  case $WM_COMPILER in
-  mingw32)
-    unpackFile $MINGW32RT_TARFILE $PREFIX/$TARGET/
-    unpackFile $W32API_TARFILE $PREFIX/$TARGET/
-    ;;
-  mingw-w32 | mingw-w64)
-    unpackFile $MINGW64_TARFILE
-    moveUnpackedFolder $MINGW64_TARFILE $MINGW_W64_HOME
-    ;;
-  esac
-}
-
-
 do_links_GM()
 {
   #hook up gmp, mpfr and mpc to gcc's folder
@@ -290,14 +149,17 @@ do_links_GM()
   if [ ! -d "$GCC_HOME/mpfr" ]; then
     ln -s $MPFR_HOME $GCC_HOME/mpfr
   fi
-  if [ ! -d "$GCC_HOME/mpc" ]; then
-    ln -s $MPC_HOME $GCC_HOME/mpc
+  if [ -n "$MPCVERSION" ]; then
+    if [ ! -d "$GCC_HOME/mpc" ]; then
+      ln -s $MPC_HOME $GCC_HOME/mpc
+    fi
   fi
 }
 
 
 configure_binutils()
 {
+  [ -d "$BINUTILS_BDIR" ] && rm -rf "$BINUTILS_BDIR"
   mkdir -p "$BINUTILS_BDIR"
   cd "$BINUTILS_BDIR"
   echo "Configuring binutils"
@@ -388,6 +250,7 @@ install_gcc_core()
 
 configure_mingw_w64crt()
 {
+  [ -d "$MINGW_W64_BDIR" ] && rm -rf "$MINGW_W64_BDIR"
   mkdir -p "$MINGW_W64_BDIR"
   cd "$MINGW_W64_BDIR"
   echo "Configuring mingw-w64-crt"
@@ -430,7 +293,7 @@ install_mingw_w64crt()
 
 configure_gcc()
 {
-  if [ -d "$GCC_BDIR" ]; then rm -rf "$GCC_BDIR"; fi
+  [ -d "$GCC_BDIR" ]; rm -rf "$GCC_BDIR"
   mkdir -p "$GCC_BDIR"
   cd "$GCC_BDIR"
   echo "Configuring gcc"
@@ -491,6 +354,34 @@ install_gcc()
 }
 
 
+createSTDCPPShared()
+{
+  cd "${PREFIX}/mingw/lib"
+  mkdir tmp
+  cd tmp
+
+  #source http://mingw-users.1079350.n2.nabble.com/Complete-libstdc-dll-for-gcc-4-4-0-td3323078.html
+  cp -f ../libstdc++.a libstdc++_t.a
+  ${TARGET}-ar -x libstdc++_t.a array_type_info.o class_type_info.o enum_type_info.o \
+    function_type_info.o fundamental_type_info.o pbase_type_info.o pmem_type_info.o \
+    pointer_type_info.o si_class_type_info.o vmi_class_type_info.o
+  ${TARGET}-ar -d libstdc++_t.a array_type_info.o class_type_info.o enum_type_info.o \
+    function_type_info.o fundamental_type_info.o pbase_type_info.o pmem_type_info.o \
+    pointer_type_info.o si_class_type_info.o vmi_class_type_info.o
+  ${TARGET}-dlltool --export-all --output-def=../libstdc++.def libstdc++_t.a
+  ${TARGET}-gcc -shared -shared-libgcc -o ${PREFIX}/bin/libstdc++-6.dll -Wl,--out-implib,../libstdc++.dll.a \
+            ../libstdc++.def ../libstdc++.a
+  ${TARGET}-ar -rs ../libstdc++.dll.a array_type_info.o class_type_info.o \
+    enum_type_info.o function_type_info.o fundamental_type_info.o pbase_type_info.o \
+    pmem_type_info.o pointer_type_info.o si_class_type_info.o vmi_class_type_info.o
+
+  cd ..
+  rm -rf tmp
+  cp libstdc++.la libstdc++.la.bck.$(date +%Y-%m-%d_%H-%M)
+  sed -i -e 's_\(^dlname=.\)\(.\)_\1../../bin/libstdc++-6.dll\2_' -e 's_\(^library\_names=.\)\(.\)_\1libstdc++.dll.a\2_' libstdc++.la
+}
+
+
 final_tweaks()
 {
   echo "Finalizing installation"
@@ -511,6 +402,11 @@ final_tweaks()
 #     strip "$file"
 #   done
 
+  if [ -z "$MPCVERSION" ]; then
+    #create libstdc++-6.dll for gcc 4.4.x
+    createSTDCPPShared
+  fi
+
   #fix the float.h issue
   cd $WM_THIRD_PARTY_DIR
   ./fixSystemMingw force
@@ -522,10 +418,6 @@ final_tweaks()
 #
 # Main part of the script
 #
-
-download_files
-
-unpack_files
 
 configure_binutils
 build_binutils
