@@ -48,7 +48,7 @@ GE_showDesc()
 GE_update()
 {
   wget "$1" -O $testFile > /dev/null 2>&1
-  grep -e "make-[3]\.[0-9][0-9][\.0-9]*" $testFile | \
+  grep -e "make-[3]\.[0-9][0-9][\.0-9]*.$appFileExt<" $testFile | \
     sed -e 's=.*>\(make-.*\)\.'$appFileExt'<.*=\1=' -e 's_-_=_' | \
     sort -u > $versionCacheFile
   rm $testFile
