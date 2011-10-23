@@ -48,7 +48,7 @@ GE_update()
 {
   wget "${1}" -O $testFile > /dev/null 2>&1
   grep -e 'flex-[0-9\.]*'$appFileExt $testFile | \
-    sed -e 's=.*\(flex-[0-9\.a]*\).'$appFileExt'=\1=' -e 's_-_=_' | \
+    sed -e 's=.*\(flex-[0-9\.a]*\).'$appFileExt'.*=\1=' -e 's_-_=_' | \
     sort -u > ${versionCacheFile}
 
   grep -e 'flex-[0-9.]*'$appFileExt $testFile | \
