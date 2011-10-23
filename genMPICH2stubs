@@ -108,7 +108,7 @@ if [ ! -e "$MPI_ARCH_PATH/lib/libmpi.a" ]; then
     must_build_pexports
   fi
 
-  echo -e "\033[1m Generating MPICH2 stub... \033[0m"
+  echo -e "\033[1m Generating MPICH2 library interfaces for MinGW... \033[0m"
 
   create_gcccompatible_library
   patch_mpi_includes
