@@ -139,6 +139,61 @@ GCC_LANGS="c,c++"
 #
 #-----------------------------------------------------
 
+get_em_all()
+{
+  if [ ! -d "$GMP_HOME" ]; then
+    ./get-em so gmp=default || {
+      echo "Unable to retrieve and unpack necessary files for GMP."
+      exit 1
+    }
+  fi
+  if [ ! -d "$MPFR_HOME" ]; then
+    ./get-em so mpfr=default || {
+      echo "Unable to retrieve and unpack necessary files for MPFR."
+      exit 1
+    }
+  fi
+  if [ -n "$MPCVERSION" ]; then
+    if [ ! -d "$MPC_HOME" ]; then
+      ./get-em so mpc=default || {
+        echo "Unable to retrieve and unpack necessary files for MPC."
+        exit 1
+      }
+    fi
+  fi
+  if [ ! -d "$GCC_HOME" ]; then
+    ./get-em so gcc=default || {
+      echo "Unable to retrieve and unpack necessary files for GCC."
+      exit 1
+    }
+  fi
+
+  case $WM_COMPILER in
+    mingw32)
+      if [ ! -d "$MINGW32RT_HOME" ]; then
+        ./get-em so mingwrt=default || {
+          echo "Unable to retrieve and unpack necessary files for MinGW-RT."
+          exit 1
+        }
+      fi
+      if [ ! -d "$W32API_HOME" ]; then
+        ./get-em so w32api=default || {
+          echo "Unable to retrieve and unpack necessary files for W32API."
+          exit 1
+        }
+      fi
+      ;;
+    mingw-w32 | mingw-w64)
+      if [ ! -d "$MINGW_W64_HOME" ]; then
+        ./get-em so mingw-w64-crt=default || {
+          echo "Unable to retrieve and unpack necessary files for MinGW-w64."
+          exit 1
+        }
+      fi
+      ;;
+  esac
+}
+
 
 do_links_GM()
 {
@@ -418,6 +473,8 @@ final_tweaks()
 #
 # Main part of the script
 #
+
+get_em_all
 
 configure_binutils
 build_binutils
