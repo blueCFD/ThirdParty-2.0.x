@@ -106,7 +106,9 @@ GE_levels()
 GE_exe_msi_unpack()
 {
   mkdir "$testFile" > /dev/null 2>&1 && \
-  mkdir -p $FOLDER/{bin,lib,include} > /dev/null 2>&1 && {
+  mkdir -p $FOLDER/bin > /dev/null 2>&1 &&
+  mkdir -p $FOLDER/lib > /dev/null 2>&1 &&
+  mkdir -p $FOLDER/include > /dev/null 2>&1 && {
     FOLDER=${WM_THIRD_PARTY_DIR}/${FOLDER}
     7z x "$1" -o"$testFile"/ _* > /dev/null
     cd $testFile
