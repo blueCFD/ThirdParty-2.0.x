@@ -465,11 +465,11 @@ final_tweaks()
   rm -rf "${PREFIX}/${WM_COMPILER}/${TARGET}/sys-include"
 
   # create nice links for the binaries
-  cd ${PREFIX}/bin
-  for afile in `find . -name "${TARGET}-*"`; do
-    LINKNAME=`echo $afile | sed -e 's='${TARGET}'='${WM_COMPILER}'='`
-    ln -s $afile $LINKNAME
-  done
+#   cd ${PREFIX}/bin
+#   for afile in `find . -name "${TARGET}-*"`; do
+#     LINKNAME=`echo $afile | sed -e 's='${TARGET}'='${WM_COMPILER}'='`
+#     ln -s $afile $LINKNAME
+#   done
 
   # strip all the binaries
 #   ls "${PREFIX}"/bin/* "${PREFIX}/${TARGET}"/bin/* | egrep -v '.dll$' | egrep -v 'gccbug$' |

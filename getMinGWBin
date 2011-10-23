@@ -69,7 +69,7 @@ fi
 #mingw-w32-1.0-bin_i686-cygwin_'date'.tar.bz2
 #mingw-w64-1.0-bin_i686-cygwin_'date'.tar.bz2
 
-targetFolder="$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER$WM_COMPILER_ARCH/mingw"
+targetFolder="$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/mingw"
 
 if [ -d $targetFolder ]; then
   echo "It seems that there is already an existing mingw cross-compiler installed."

@@ -45,7 +45,7 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
 . etc/tools/ThirdPartyFunctions
 . etc/tools/makeExtraThirdPartyFunctions
 
-export PATH=$PATH:$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER$WM_COMPILER_ARCH/pexports-0.44-1/bin
+export PATH=$PATH:$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/pexports-0.44-1/bin
 
 #end of initializations -------------------------------------------
 

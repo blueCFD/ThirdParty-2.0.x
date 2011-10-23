@@ -45,7 +45,7 @@ else
   INSTPACK_FILE=$INSTPACK_X86
 fi
 
-export PATH=$PATH:$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER$WM_COMPILER_ARCH/pexports-0.44-1/bin
+export PATH=$PATH:$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/pexports-0.44-1/bin
 
 if ! isMinGW; then
   echo "Error: this script is meant to be used for MinGW compilers only!"
