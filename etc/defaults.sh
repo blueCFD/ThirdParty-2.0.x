@@ -91,6 +91,7 @@ boost_version=boost_1_45_0
 cgal_version=CGAL-3.8
 
 make_version=3.82
+flex_version=2.35.5
 
 qt_version=4.7.3
 
