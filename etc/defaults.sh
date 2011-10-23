@@ -74,8 +74,8 @@ mingw32 | mingw-w32 | mingw-w64 | i686-w64-mingw32 | x86_64-w64-mingw32)
 #    binutils_version="binutils-2.21.1"
 
     #MinGW versions
-    mingw32rt_version="mingwrt-3.18"
-    w32api_version="w32api-3.14"
+    mingw32rt_version="mingwrt-3.20"
+    w32api_version="w32api-3.17-2"
     mingw_w64_version="1.x" #1.x or 2.x
     ;;
 *)
