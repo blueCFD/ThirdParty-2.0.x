@@ -45,8 +45,8 @@ GE_showDesc()
 GE_update()
 {
   wget "$1" -O $testFile > /dev/null 2>&1
-  grep -e '>'$appName'-[0-9]\.[0-9\.]*' $testFile | \
-    sed -e 's=.*>\('$appName'-[0-9]\.[0-9\.]*\)<.*=\1=' -e 's_-_=_' | \
+  grep -e '/'$appName'-[0-9]\.[0-9\.]*/' $testFile | \
+    sed -e 's=.*/\('$appName'-[0-9]\.[0-9\.]*\)/.*=\1=' -e 's_-_=_' | \
     sort -u > $versionCacheFile
   rm $testFile
 }
