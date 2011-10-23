@@ -368,6 +368,10 @@ GETEM_verifyfile()
      tar -tjf download/$FILENAME > /dev/null 2>&1 && VERIFY_STATUS=1
      break
      ;;
+  tar.lzma)
+     tar --lzma -tf download/$FILENAME > /dev/null 2>&1 && VERIFY_STATUS=1
+     break
+     ;;
   zip)
      unzip -t download/$FILENAME > /dev/null 2>&1 && VERIFY_STATUS=1
      break
@@ -468,7 +472,7 @@ GETEM_unpackFile()
 
       #divide algorithm by major file type
       case $appFileExt in
-      tar.gz)
+      tar.*)
         TAR_STRIP_OPTION=""
         if [ -n "`export LC_ALL=C; tar --help | grep strip-path`" ]; then
           TAR_STRIP_OPTION="--strip-path=$LEVELS2KILL"
@@ -486,6 +490,12 @@ GETEM_unpackFile()
         tar.bz2)
           mkdir -p "$FOLDER" && \
             tar -xjf download/$FILENAME -C "$FOLDER" $TAR_STRIP_OPTION 1>/dev/null
+          [ -z "$TAR_STRIP_OPTION" ] && GETEM_moveFilesIntoPlace "$FOLDER" $LEVELS2KILL
+          break
+          ;;
+        tar.lzma)
+          mkdir -p "$FOLDER" && \
+            tar --lzma -xf download/$FILENAME -C "$FOLDER" $TAR_STRIP_OPTION 1>/dev/null
           [ -z "$TAR_STRIP_OPTION" ] && GETEM_moveFilesIntoPlace "$FOLDER" $LEVELS2KILL
           break
           ;;
