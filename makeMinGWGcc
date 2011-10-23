@@ -111,7 +111,21 @@ W32API_HOME="$WM_THIRD_PARTY_DIR/$W32APIVERSION"
 MINGW_W64_HOME="$WM_THIRD_PARTY_DIR/mingw-w64-crt-$MINGW_W64_VERSION"
 
 PREFIX="$WM_COMPILER_DIR"
-PURGE=""
+
+if [ -d "$PREFIX" ]; then
+  echo "It seems that there is already an existing mingw cross-compiler installed."
+  echo "Do you wish to remove it and update it to the latest available version? (yes or no)"
+  read answer
+  case $answer in
+      yes | y | Y | Yes | YES)
+        rm -rf "$PREFIX"
+        ;;
+      *)
+        echo "Installation aborted."
+        exit 1
+        ;;
+  esac
+fi
 
 #make sure the log folder exists and expand its path
 if [ ! -d "$LOG_FOLDER" ]; then
