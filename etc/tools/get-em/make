@@ -61,7 +61,7 @@ GE_update()
 #
 GE_geturl()
 {
-  echo ${1}make-$2/make-$2.$appFileExt
+  echo ${1}make-$2.$appFileExt
 }
 
 

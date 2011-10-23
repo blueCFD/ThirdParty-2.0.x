@@ -62,7 +62,7 @@ GE_update()
 #
 GE_geturl()
 {
-  echo ${1}binutils-$2/binutils-$2.$appFileExt
+  echo ${1}binutils-$2.$appFileExt
 }
 
 
