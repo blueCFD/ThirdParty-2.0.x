@@ -79,9 +79,6 @@ mingw-w64)
   ;;
 esac
 
-# What build should we make
-definedBUILDmachine
-
 #WM_COMPILER_DIR <- this is the prefix for all builds made here!
 #buildBASE <- this is where the things are going to be built
 #$buildBASE/$---VERSION <- this is where each package is going to be built
