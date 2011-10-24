@@ -371,8 +371,8 @@ setup_mingw_w64_headersNlinks()
 setup_mingw_w64_headersNlinks_win()
 {
   echo "setting up the mingw-w64 winsup headers and symlinks"
-  [ -L "$GCC_HOME/gcc/winsup" ] && unlink "$GCC_HOME/gcc/winsup"
-  [ ! -L "$GCC_HOME/gcc/winsup" ] && ln -s "$WM_COMPILER" "$GCC_HOME/gcc/winsup"
+  [ -L "$GCC_HOME/winsup" ] && unlink "$GCC_HOME/winsup"
+  [ ! -L "$GCC_HOME/winsup" ] && ln -s "$WM_COMPILER" "$GCC_HOME/winsup"
 }
 
 
