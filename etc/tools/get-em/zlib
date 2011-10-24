@@ -45,8 +45,8 @@ GE_showDesc()
 GE_update()
 {
   wget "$1" -O $testFile > /dev/null 2>&1
-  grep -e '/[0-9]\.[0-9\.]*/' $testFile | \
-    sed -e 's=.*\(/[0-9]\.[0-9\.]*\)/.*=\1=' -e 's_/_'$appName'=_' | \
+  grep -e 'zlib/[0-9]\.[0-9\.]*/' $testFile | \
+    sed -e 's=.*zlib/\(/[0-9]\.[0-9\.]*\)/.*=\1=' -e 's_/_'$appName'=_' | \
     sort -u > $versionCacheFile
   rm $testFile
 }
