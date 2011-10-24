@@ -148,6 +148,7 @@ if [ $CROSS4WIN -eq 0 ]; then
 else
   PREFIX="${WM_COMPILER_DIR}_win"
   CONFIGHOST="--host=${TARGET}"
+  buildBASE="${buildBASE}_win"
 fi
 
 if [ -d "$PREFIX" ]; then
