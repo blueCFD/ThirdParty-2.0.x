@@ -37,13 +37,13 @@ Gcc45 | Gcc45++0x)
     gmp_version=gmp-5.0.1
     mpfr_version=mpfr-2.4.2
     mpc_version=mpc-0.8.2
-    binutils_version="binutils-2.21.1"
+    binutils_version="binutils-2.20.1"
     ;;
 Gcc44 | Gcc44++0x)
     gcc_version=gcc-4.4.3
     gmp_version=gmp-5.0.1
     mpfr_version=mpfr-2.4.2
-    binutils_version="binutils-2.21.1"
+    binutils_version="binutils-2.20.1"
     ;;
 Gcc43)
     gcc_version=gcc-4.3.3
@@ -65,7 +65,7 @@ mingw32 | mingw-w32 | mingw-w64 | i686-w64-mingw32 | x86_64-w64-mingw32)
     gmp_version="gmp-4.3.2"
     mpfr_version="mpfr-2.4.2"
     mpc_version="mpc-0.8.2"
-    binutils_version="binutils-2.21.1"
+    binutils_version="binutils-2.20.1"
 
 #    gcc_version=gcc-4.6.1
 #    gmp_version=gmp-5.0.1
