@@ -322,6 +322,15 @@ install_binutils()
 }
 
 
+setup_mingw32_headersNlinks_win()
+{
+  echo "setting up the mingw32 headers and symlinks"
+  [ ! -L "$PREFIX/mingw" ] && ln -sv $TARGET "$PREFIX/mingw"
+  [ ! -d "$PREFIX/mingw" ] && mkdir "$PREFIX/$TARGET/lib"
+  cp -r "${WM_COMPILER_DIR}/mingw"/* "$PREFIX/mingw/"
+}
+
+
 setup_mingw32_headersNlinks()
 {
   echo "setting up the mingw32 headers and symlinks"
@@ -646,8 +655,7 @@ else #cross-compile native compiler for Windows
 
   case $WM_COMPILER in
   mingw32)
-    setup_mingw_w64_headersNlinks_win
-    setup_mingw32_headersNlinks
+    setup_mingw32_headersNlinks_win
 
     configure_gcc
     build_gcc
