@@ -620,6 +620,7 @@ if [ $CROSS4WIN -eq 0 ]; then
   case $WM_COMPILER in
   mingw32)
     setup_mingw32_headersNlinks
+
     configure_gcc
     build_gcc
     install_gcc
@@ -645,7 +646,9 @@ else #cross-compile native compiler for Windows
 
   case $WM_COMPILER in
   mingw32)
+    setup_mingw_w64_headersNlinks_win
     setup_mingw32_headersNlinks
+
     configure_gcc
     build_gcc
     install_gcc
