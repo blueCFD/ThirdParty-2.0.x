@@ -100,7 +100,7 @@ GE_getfolder()
 #
 GE_levels()
 {
-  echo 1
+  echo 0
 }
 
 
