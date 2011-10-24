@@ -152,7 +152,11 @@ else
 fi
 
 if [ -d "$PREFIX" ]; then
-  echo "It seems that there is already an existing mingw cross-compiler installed."
+  if [ $CROSS4WIN -eq 0 ]; then
+    echo "It seems that there is already an existing mingw cross-compiler installed."
+  else
+    echo "It seems that there is already an existing mingw compiler for Windows installed."
+  fi
   echo "Do you wish to remove it and update it to the latest available version? (yes or no)"
   read answer
   case $answer in
@@ -365,8 +369,8 @@ setup_mingw_w64_headersNlinks()
 setup_mingw_w64_headersNlinks_win()
 {
   echo "setting up the mingw-w64 winsup headers and symlinks"
-  [ ! -d "$PREFIX/winsup/mingw" ] && mkdir -p "$PREFIX/winsup/mingw"
-  [ ! -L "$PREFIX/$TARGET/lib64" ] && ln -s "$WM_COMPILER_DIR/$TARGET/include" "$PREFIX/winsup/mingw/include"
+  [ -L "$GCC_HOME/gcc/winsup" ] && unlink "$GCC_HOME/gcc/winsup"
+  [ ! -L "$GCC_HOME/gcc/winsup" ] && ln -s "$WM_COMPILER" "$GCC_HOME/gcc/winsup"
 }
 
 
