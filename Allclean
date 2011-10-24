@@ -45,15 +45,6 @@ if isMinGW; then
   ./AllwcleanZLib
   ./AllwcleanRegEx
   wclean libso stack_trace
-
-  case "$WM_MPLIB" in
-  MPICH)
-      ./genMPICH2stubs clean
-      ;;
-  MSMPI)
-      ./genMSMPIstubs clean
-      ;;
-  esac
 fi
 
 if [ -d "libccmio-2.6.1" ]
