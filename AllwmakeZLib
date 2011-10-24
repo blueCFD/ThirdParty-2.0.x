@@ -51,7 +51,7 @@ fi
 
 #check if unpacked successfully and if the Make folder exists
 isProjectInstalled $ZLIBNAMENVERSION/Make
-if [ "$ALREADYUNPACKED" = "Yes" ]; then
+if [ "$ALREADYUNPACKED" != "Yes" ]; then
   #apply patches
   echo "Copying Make files"
   ( cd $ZLIBNAMENVERSION && cpMakeFiles zlib )
