@@ -326,14 +326,47 @@ setup_mingw32_headersNlinks()
 }
 
 
+conf_inst_mingw_w64_headers()
+{
+  #Use the same folder as the CRT for building, since CRT's related configure
+  #will make a cleanup before using this folder.
+  [ -d "$MINGW_W64_BDIR" ] && rm -rf "$MINGW_W64_BDIR"
+  mkdir -p "$MINGW_W64_BDIR"
+  cd "$MINGW_W64_BDIR"
+  echo "Configuring mingw-w64-headers"
+  "$MINGW_W64_HOME/mingw-w64-headers/configure" --prefix=${PREFIX} \
+      $CONFIGHOST --host=${TARGET} \
+      > ${LOG_FOLDER}/mingw-w64-headers-${WM_COMPILER}_configure.log 2>&1
+  if test $? -ne 0; then
+    echo "configure of mingw-w64-headers failed - log available: ${LOG_FOLDER}/mingw-w64-headers-${WM_COMPILER}_configure.log"
+    exit 1
+  fi
+
+  echo "Installing mingw-w64-headers"
+  make install > ${LOG_FOLDER}/mingw-w64-headers-${WM_COMPILER}_install.log 2>&1
+  if test $? -ne 0; then
+    echo "install of mingw-w64-headers failed - log available: ${LOG_FOLDER}/mingw-w64-headers-${WM_COMPILER}_install.log"
+    exit 1
+  fi
+}
+
+
 setup_mingw_w64_headersNlinks()
 {
   echo "setting up the mingw-w64 headers and symlinks"
-  if [ ! -L "$PREFIX/mingw" ];then ln -sv $TARGET $PREFIX/mingw; fi
-  cd "$MINGW_W64_HOME/mingw-w64-headers"
-  cp -r include "$PREFIX/$TARGET/"
-  if [ ! -d "$PREFIX/mingw" ];then mkdir "$PREFIX/$TARGET/lib"; fi
-  if [ ! -L "$PREFIX/$TARGET/lib64" ];then ln -sv lib $PREFIX/$TARGET/lib64; fi
+  conf_inst_mingw_w64_headers
+#   cd "$MINGW_W64_HOME/mingw-w64-headers"
+#   cp -r include "$PREFIX/$TARGET/"
+  [ ! -L "$PREFIX/mingw" ] && ln -sv $TARGET $PREFIX/mingw
+  [ ! -d "$PREFIX/mingw" ] && mkdir "$PREFIX/$TARGET/lib"
+  [ ! -L "$PREFIX/$TARGET/lib64" ] && ln -sv lib $PREFIX/$TARGET/lib64
+}
+
+setup_mingw_w64_headersNlinks_win()
+{
+  echo "setting up the mingw-w64 winsup headers and symlinks"
+  [ ! -d "$PREFIX/winsup/mingw" ] && mkdir -p "$PREFIX/winsup/mingw"
+  [ ! -L "$PREFIX/$TARGET/lib64" ] && ln -s "$WM_COMPILER_DIR/$TARGET/include" "$PREFIX/winsup/mingw/include"
 }
 
 
@@ -405,9 +438,43 @@ install_mingw_w64crt()
 }
 
 
+copy_mingw_w64_crt()
+{
+  echo "Copying mingw-w64-crt from the built version from the cross-compiler"
+  cd "${PREFIX}/${TARGET}/lib"
+  cp -r "${WM_COMPILER_DIR}/${TARGET}/lib"/* .
+}
+
+
+configure_gcc_win()
+{
+  [ -d "$GCC_BDIR" ] && rm -rf "$GCC_BDIR"
+  mkdir -p "$GCC_BDIR"
+  cd "$GCC_BDIR"
+  echo "Configuring gcc"
+  ${GCC_HOME}/configure -v \
+    CFLAGS="-I${WM_COMPILER_DIR}/include -L${WM_COMPILER_DIR}/lib" \
+    --prefix=${PREFIX} $CONFIGHOST --target=${TARGET} \
+    --with-sysroot=${PREFIX} --enable-fully-dynamic-strings --disable-werror \
+    --disable-multilib \
+    --with-pkgversion='OpenFOAM' --enable-languages=${GCC_LANGS} \
+    --disable-win32-registry --enable-shared --disable-static --enable-sjlj-exceptions \
+    --without-x --disable-debug \
+    --enable-interpreter --with-host-libstdcxx='-lstdc++' \
+    --with-gcc --with-gnu-ld --with-gnu-as --enable-libstdcxx-allocator=new \
+    --enable-threads=win32 --disable-nls \
+    > ${LOG_FOLDER}/gcc-${WM_COMPILER}_configure.log 2>&1
+
+  if test $? -ne 0; then
+    echo "configure of gcc failed - log available: ${LOG_FOLDER}/gcc-${WM_COMPILER}_configure.log"
+    exit 1
+  fi
+}
+
+
 configure_gcc()
 {
-  [ -d "$GCC_BDIR" ]; rm -rf "$GCC_BDIR"
+  [ -d "$GCC_BDIR" ] && rm -rf "$GCC_BDIR"
   mkdir -p "$GCC_BDIR"
   cd "$GCC_BDIR"
   echo "Configuring gcc"
@@ -521,9 +588,11 @@ final_tweaks()
     createSTDCPPShared
   fi
 
-  #fix the float.h issue
-  cd $WM_THIRD_PARTY_DIR
-  ./fixSystemMingw force
+  if [ $CROSS4WIN -eq 0 ]; then
+    #fix the float.h issue
+    cd $WM_THIRD_PARTY_DIR
+    ./fixSystemMingw force
+  fi
 
   echo "Installation complete!"
 }
@@ -539,29 +608,56 @@ configure_binutils
 build_binutils
 install_binutils
 
-case $WM_COMPILER in
-mingw32)
-  setup_mingw32_headersNlinks
-  configure_gcc
-  build_gcc
-  install_gcc
-  ;;
+#create normal cross-compilation
+if [ $CROSS4WIN -eq 0 ]; then
 
-mingw-w32 | mingw-w64)
-  setup_mingw_w64_headersNlinks
+  case $WM_COMPILER in
+  mingw32)
+    setup_mingw32_headersNlinks
+    configure_gcc
+    build_gcc
+    install_gcc
+    ;;
 
-  configure_gcc
-  build_gcc_core
-  install_gcc_core
+  mingw-w32 | mingw-w64)
+    setup_mingw_w64_headersNlinks
 
-  configure_mingw_w64crt
-  build_mingw_w64crt
-  install_mingw_w64crt
+    configure_gcc
+    build_gcc_core
+    install_gcc_core
 
-  build_gcc
-  install_gcc
-  ;;
-esac
+    configure_mingw_w64crt
+    build_mingw_w64crt
+    install_mingw_w64crt
+
+    build_gcc
+    install_gcc
+    ;;
+  esac
+
+else #cross-compile native compiler for Windows
+
+  case $WM_COMPILER in
+  mingw32)
+    setup_mingw32_headersNlinks
+    configure_gcc
+    build_gcc
+    install_gcc
+    ;;
+
+  mingw-w32 | mingw-w64)
+    setup_mingw_w64_headersNlinks_win
+    setup_mingw_w64_headersNlinks
+
+    configure_gcc_win
+    build_gcc
+    install_gcc
+
+    copy_mingw_w64_crt
+    ;;
+  esac
+
+fi
 
 final_tweaks
 
