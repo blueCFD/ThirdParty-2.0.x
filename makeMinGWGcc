@@ -42,11 +42,43 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
 . etc/tools/makeExtraThirdPartyFunctions
 #------------------------------------------------------------------------------
 
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+usage: ${0##*/} [cross4win]
+
+* Builds compiler Gcc/G++ with MinGW capabilities to run in Linux/Cygwin.
+* Option "cross4win" will compile the version Windows version of the compiler.
+
+USAGE
+    exit 1
+}
+
+CROSS4WIN=0
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    cross4win)
+        CROSS4WIN=1
+        shift
+        ;;
+    *)
+        usage "unknown option/argument: '$*'"
+        ;;
+    esac
+done
+
 #-----------------------------------------------------
 #
 # BEGIN USER SETTINGS
 #
-# You need to review and adjust the macros that follow
+# All settings are now defined in etc/defaults.sh
 #
 #-----------------------------------------------------
 
@@ -110,7 +142,13 @@ W32API_HOME="$WM_THIRD_PARTY_DIR/$W32APIVERSION"
 
 MINGW_W64_HOME="$WM_THIRD_PARTY_DIR/mingw-w64-crt-$MINGW_W64_VERSION"
 
-PREFIX="$WM_COMPILER_DIR"
+if [ $CROSS4WIN -eq 0 ]; then
+  PREFIX="$WM_COMPILER_DIR"
+  CONFIGHOST=""
+else
+  PREFIX="${WM_COMPILER_DIR}_win"
+  CONFIGHOST="--host=${TARGET}"
+fi
 
 if [ -d "$PREFIX" ]; then
   echo "It seems that there is already an existing mingw cross-compiler installed."
@@ -239,7 +277,7 @@ configure_binutils()
   cd "$BINUTILS_BDIR"
   echo "Configuring binutils"
   "$BINUTILS_HOME/configure" --prefix=${PREFIX} \
-      --target=${TARGET} --disable-nls \
+      $CONFIGHOST --target=${TARGET} --disable-nls \
       --with-sysroot=${PREFIX}  --disable-multilib \
       --with-host-libstdcxx='-lstdc++' --with-gcc \
       --with-gnu-as --with-gnu-ld --enable-shared --disable-rpath \
@@ -373,7 +411,7 @@ configure_gcc()
   cd "$GCC_BDIR"
   echo "Configuring gcc"
   ${GCC_HOME}/configure -v \
-    --prefix=${PREFIX} --target=${TARGET} \
+    --prefix=${PREFIX} $CONFIGHOST --target=${TARGET} \
     --with-sysroot=${PREFIX} --enable-fully-dynamic-strings --disable-werror \
     --disable-multilib \
     --with-pkgversion='OpenFOAM' --enable-languages=${GCC_LANGS} \

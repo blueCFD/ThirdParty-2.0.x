@@ -117,14 +117,8 @@ LOG_FOLDER=`( cd "$LOG_FOLDER" && pwd )`
 
 BINUTILS_BDIR="$buildBASE/$BINUTILSVERSION"
 
-
-#set architecture bits
-ABI=$WM_ARCH_OPTION
-
-
 #define files to download and respective URLS
 BINUTILS_TARFILE="${BINUTILSVERSION}.tar.bz2"
-
 
 BINUTILS_URL="ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/binutils/releases/${BINUTILS_TARFILE}"
 
