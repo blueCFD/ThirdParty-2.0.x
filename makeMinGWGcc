@@ -327,8 +327,8 @@ setup_mingw32_headersNlinks()
   echo "setting up the mingw32 headers and symlinks"
   [ ! -L "$PREFIX/mingw" ] && ln -sv $TARGET "$PREFIX/mingw"
   [ ! -d "$PREFIX/mingw" ] && mkdir "$PREFIX/$TARGET/lib"
-  cp -r "$MINGW32RT_HOME/*" "$PREFIX/mingw/"
-  cp -r "$W32API_HOME/*" "$PREFIX/mingw/"
+  cp -r ${MINGW32RT_HOME}/* "$PREFIX/mingw/"
+  cp -r ${W32API_HOME}/* "$PREFIX/mingw/"
 }
 
 
