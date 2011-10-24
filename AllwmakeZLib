@@ -40,22 +40,18 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
 
 
 #set script options
-ZLIBVERSION=1.2.5
-ZLIBNAMENVERSION=zlib-${ZLIBVERSION}
-ZLIBFILE=zlib-1.2.5.tar.bz2
-ZLIBURL="http://downloads.sourceforge.net/project/libpng/zlib/${ZLIBVERSION}/${ZLIBFILE}?use_mirror=mesh"
-
+ZLIBVERSION=`. etc/defaults.sh ; echo \$zlib_version`
+ZLIBNAMENVERSION="zlib-$ZLIBVERSION"
 
 #check if download is necessary
 isProjectInstalled $ZLIBNAMENVERSION
-
 if [ "$ALREADYUNPACKED" != "Yes" ]; then
-  #download the necessary files
-  downloadFile $ZLIBFILE $ZLIBURL
+  ./get-em so zlib=$ZLIBVERSION || exit 1
+fi
 
-  #unpack the files
-  unpackFile $ZLIBFILE
-
+#check if unpacked successfully and if the Make folder exists
+isProjectInstalled $ZLIBNAMENVERSION/Make
+if [ "$ALREADYUNPACKED" = "Yes" ]; then
   #apply patches
   echo "Copying Make files"
   ( cd $ZLIBNAMENVERSION && cpMakeFiles zlib )
