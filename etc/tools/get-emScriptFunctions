@@ -262,7 +262,7 @@ GETEM_pickmirror()
 {
   [ "$#" -lt 1 ] && GETEM_usage "Missing POSITION for mirror picking."
   MIRRORCOUNT=`cat $serverMirrorFile | wc -l`
-  if [ $MIRRORCOUNT -gt 1 -a $1 -ge 1 -a $1 -lt $MIRRORCOUNT ]; then
+  if [ $MIRRORCOUNT -gt 1 -a $1 -ge 1 -a $1 -le $MIRRORCOUNT ]; then
     [ -r $testFile ] && rm $testFile
     mirror=`cat $serverMirrorFile | sed -n $1'p'`
     echo $mirror > $testFile
