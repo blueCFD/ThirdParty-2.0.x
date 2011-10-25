@@ -30,26 +30,26 @@ Gcc | Gcc++0x | Gcc46 | Gcc46++0x)
     gmp_version=gmp-5.0.1
     mpfr_version=mpfr-2.4.2
     mpc_version=mpc-0.8.2
-    binutils_version="binutils-2.21.1a"
+    binutils_version="binutils-2.21"
     ;;
 Gcc45 | Gcc45++0x)
     gcc_version=gcc-4.5.3
     gmp_version=gmp-5.0.1
     mpfr_version=mpfr-2.4.2
     mpc_version=mpc-0.8.2
-    binutils_version="binutils-2.21.1a"
+    binutils_version="binutils-2.21"
     ;;
 Gcc44 | Gcc44++0x)
     gcc_version=gcc-4.4.3
     gmp_version=gmp-5.0.1
     mpfr_version=mpfr-2.4.2
-    binutils_version="binutils-2.21.1a"
+    binutils_version="binutils-2.21"
     ;;
 Gcc43)
     gcc_version=gcc-4.3.3
     gmp_version=gmp-4.2.4
     mpfr_version=mpfr-2.4.1
-    binutils_version="binutils-2.20.1a"
+    binutils_version="binutils-2.20.1"
     ;;
 Clang)
     #clang_version=llvm-2.9
@@ -65,7 +65,7 @@ mingw32 | mingw-w32 | mingw-w64 | i686-w64-mingw32 | x86_64-w64-mingw32)
     gmp_version="gmp-4.3.2"
     mpfr_version="mpfr-2.4.2"
     mpc_version="mpc-0.8.2"
-    binutils_version="binutils-2.21.1a"
+    binutils_version="binutils-2.21"
 
 #    gcc_version=gcc-4.6.1
 #    gmp_version=gmp-5.0.1
