@@ -61,14 +61,8 @@ build-*/
 /mpc-*/
 /pexports-*/
 /zlib-*/
-/scotch_5.1/bin/*
-/scotch_5.1/src/scotch/dgmap.*
-/scotch_5.1/src/scotch/dgord.*
-/scotch_5.1/src/scotch/dgpart.*
-/scotch_5.1/src/scotch/dgscat.*
-/scotch_5.1/src/scotch/dgtst.*
-/scotch_5.1/src/libscotchmetis/libptscotchparmetis.def
-/scotch_5.1/src/libscotchmetis/libscotchmetis.def
+/scotch_*/
+/tecio*/
 
 # generated files in the main directory (e.g. ReleaseNotes-?.?.html)
 /*.html
