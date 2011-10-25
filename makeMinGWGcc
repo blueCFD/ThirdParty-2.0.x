@@ -619,6 +619,8 @@ final_tweaks()
 
 get_em_all
 
+do_links_GM
+
 configure_binutils
 build_binutils
 install_binutils
