@@ -45,16 +45,7 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
 . etc/tools/ThirdPartyFunctions
 . etc/tools/makeExtraThirdPartyFunctions
 
-export PATH=$PATH:$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/pexports-0.44-1/bin
-
 #end of initializations -------------------------------------------
-
-must_build_pexports()
-{
-  cd $WM_THIRD_PARTY_DIR
-  ./build-pexports
-}
-
 
 create_gcccompatible_library()
 {
@@ -77,9 +68,8 @@ fi
 
 if [ ! -e "$MPI_ARCH_PATH/lib/libmpi.a" ]; then
 
-  if test "x`which pexports`" = "x" ; then
-    must_build_pexports
-  fi
+  #this function will take care of the logistics associated with using pexports.
+  build_pexports
 
   echo -e "\033[1m Generating Open-MPI library interfaces for MinGW... \033[0m"
 
