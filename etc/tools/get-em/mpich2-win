@@ -77,7 +77,7 @@ GE_geturl()
   if [ $WM_ARCH_OPTION -eq 32 ]; then
     echo ${1}${2}/mpich2-$2-win-ia32.$appFileExt
   else
-    echo ${1}${2}/mpich2-$2-win-x86_64.$appFileExt
+    echo ${1}${2}/mpich2-$2-win-x86-64.$appFileExt
   fi
 }
 
@@ -90,7 +90,7 @@ GE_getfilename()
   if [ $WM_ARCH_OPTION -eq 32 ]; then
     echo mpich2-$1-win-ia32.$appFileExt
   else
-    echo mpich2-$1-win-x86_64.$appFileExt
+    echo mpich2-$1-win-x86-64.$appFileExt
   fi
 }
 
