@@ -216,6 +216,7 @@ MSMPI)
   else
 
     echo "Error : MSMPI isn't available for platforms other than MinGW."
+    exit 1
 
   fi
     ;;
