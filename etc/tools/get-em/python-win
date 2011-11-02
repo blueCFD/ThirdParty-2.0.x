@@ -45,9 +45,21 @@ GE_showDesc()
 GE_update()
 {
   wget "$1" -O $testFile > /dev/null 2>&1
-  grep -e '/[0-9]\.[0-9\.]*/' $testFile | \
-    sed -e 's=.*\(/[0-9]\.[0-9\.]*\)/.*=\1=' -e 's_/_python-win=_' | \
-    sort -u > $versionCacheFile
+  [ -e "$versionCacheFile" ] && rm $versionCacheFile
+  grep -e '"[0-9]\.[0-9\.]*/' $testFile | \
+    sed -e 's=.*\("[0-9]\.[0-9\.]*\)/.*=\1=' -e 's_"_'$appName'-win=_' | \
+    sort -u > ${versionCacheFile}_tmp
+    
+  cat ${versionCacheFile}_tmp | \
+  while read versionline; do
+    version2check=`echo $versionline | sed -e 's_'$appName'-win=__'`
+    wget "$1$version2check/" -O $testFile > /dev/null 2>&1
+    if [ -n "`grep -e '>'$appName'-'$version2check'.*'$appFileExt $testFile`" ]; then
+      echo $versionline >> ${versionCacheFile}
+    fi
+  done
+
+  rm ${versionCacheFile}_tmp
   rm $testFile
 }
 
@@ -72,9 +84,9 @@ GE_geturl()
 GE_getfilename()
 {
   if [ $WM_ARCH_OPTION -eq 32 ]; then
-    echo $appName-$2.$appFileExt
+    echo $appName-$1.$appFileExt
   else
-    echo $appName-$2.amd64.$appFileExt
+    echo $appName-$1.amd64.$appFileExt
   fi
 }
 

@@ -103,4 +103,4 @@ libccmio_version=2.6.1
 
 zlib_version=1.2.5
 
-python_version=2.6.7
+python_version=2.6.6
