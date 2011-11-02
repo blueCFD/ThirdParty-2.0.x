@@ -56,6 +56,27 @@ create_gcccompatible_library()
   $WM_DLLTOOL -d openmpi.def -l libmpi.a -D libmpi.dll
 }
 
+patch_mpi_includes()
+{
+  echo -e "\033[1m patching mpi.h \033[0m"
+  if [ "$WM_ARCH_OPTION" = "64" ]; then
+    cd $MPI_ARCH_PATH/include
+echo '--- mpi_orig.h  2011-11-02 16:41:18.335207542 +0000
++++ mpi.h 2011-11-02 16:41:40.202866671 +0000
+@@ -178,7 +178,7 @@
+ #define OMPI_PROVIDE_MPI_FILE_INTERFACE 1
+ 
+ #ifndef OMPI_DECLSPEC
+-#  if defined(WIN32) || defined(_WIN32)
++#  if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+ #    if defined(OMPI_IMPORTS)
+ #      define OMPI_DECLSPEC        __declspec(dllimport)
+ #    else
+' | patch -p0
+
+  fi
+}
+
 
 #script start ------------------------------------------------------
 
@@ -74,7 +95,7 @@ if [ ! -e "$MPI_ARCH_PATH/lib/libmpi.a" ]; then
   echo -e "\033[1m Generating Open-MPI library interfaces for MinGW... \033[0m"
 
   create_gcccompatible_library
-  #patch_mpi_includes
+  patch_mpi_includes
   echo -e "\033[1m All done. \033[0m"
 else
   echo -e "\033[1m Open-MPI library interfaces for MinGW are already built and ready to use. \033[0m"
