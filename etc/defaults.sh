@@ -102,3 +102,5 @@ tecio_version=2009
 libccmio_version=2.6.1
 
 zlib_version=1.2.5
+
+python_version=2.6.7
