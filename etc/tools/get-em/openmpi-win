@@ -158,8 +158,8 @@ GE_exe_msi_unpack()
 {
   mkdir "$testFile" && \
     7z x "$1" -o"$testFile" 1>/dev/null && \
-    mkdir -p $FOLDER > /dev/null 2>&1  && \
-    mv "$testFile"/\$_OUTDIR/* "$FOLDER/"
+    mkdir -p $2 > /dev/null 2>&1  && \
+    mv "$testFile"/\$_OUTDIR/* "$2/"
   [ -n "$testFile" -a -d "$testFile" ] && rm -rf "$testFile"
 }
 

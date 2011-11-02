@@ -2,7 +2,7 @@
 #------------------------------------------------------------------------------
 # License
 #
-#     This file is part of the branch "get-em" available here:
+#     This file is based on the branch "get-em" available here:
 #         https://github.com/wyldckat/ThirdParty-2.0.x/commits/get-em
 #
 #     These modifications have not been endorsed by OpenCFD Ltd, SGI corp nor
@@ -15,7 +15,7 @@
 #   trademarked by and Copyright (C) OpenFOAM Foundation.
 #
 # File
-#     etc/tools/get-em/mpich2
+#     etc/tools/get-em/python-win
 #
 # Description
 #     This script will gather the necessary information about the application.
@@ -23,8 +23,8 @@
 #
 #------------------------------------------------------------------------------
 
-versionVar="FOAM_MPI"
-appName="mpich2"
+versionVar="python_version"
+appName="python"
 appDefaultSep="-"
 appFileExt="msi"
 
@@ -34,7 +34,7 @@ appFileExt="msi"
 #
 GE_showDesc()
 {
-  echo "mpich2-win - Retrieve the MPICH2 package for Windows. Size: 7 to 11MB"
+  echo "python-win - Retrieve the Python installers for Windows. Size: 10-20MB"
 }
 
 
@@ -44,26 +44,10 @@ GE_showDesc()
 #
 GE_update()
 {
-  if [ -e ${versionCacheFile} ]; then
-    rm -f ${versionCacheFile} && \
-    touch ${versionCacheFile}
-  fi
-
   wget "$1" -O $testFile > /dev/null 2>&1
-  grep -e '>[0-9]\.[0-9\.]*' $testFile | \
-    sed -e 's=.*"\(>[0-9]\.[0-9\.]*[a-crp]*[0-9]*\)/<.*=\1=' -e 's_>_'$appName'-win=_' | \
-    sort -u > ${versionCacheFile}_tmp
-
-  cat ${versionCacheFile}_tmp | \
-  while read versionline; do
-    version2check=`echo $versionline | sed -e 's_'$appName'-win=__'`
-    wget "$1$version2check/" -O $testFile > /dev/null 2>&1
-    if [ -n "`grep -e '>'$appName'-'$version2check'.*'$appFileExt $testFile`" ]; then
-      echo $versionline >> ${versionCacheFile}
-    fi
-  done
-
-  rm ${versionCacheFile}_tmp
+  grep -e '/[0-9]\.[0-9\.]*/' $testFile | \
+    sed -e 's=.*\(/[0-9]\.[0-9\.]*\)/.*=\1=' -e 's_/_python-win=_' | \
+    sort -u > $versionCacheFile
   rm $testFile
 }
 
@@ -75,9 +59,9 @@ GE_update()
 GE_geturl()
 {
   if [ $WM_ARCH_OPTION -eq 32 ]; then
-    echo ${1}${2}/mpich2-$2-win-ia32.$appFileExt
+    echo ${1}${2}/$appName-$2.$appFileExt
   else
-    echo ${1}${2}/mpich2-$2-win-x86-64.$appFileExt
+    echo ${1}${2}/$appName-$2.amd64.$appFileExt
   fi
 }
 
@@ -88,9 +72,9 @@ GE_geturl()
 GE_getfilename()
 {
   if [ $WM_ARCH_OPTION -eq 32 ]; then
-    echo mpich2-$1-win-ia32.$appFileExt
+    echo $appName-$2.$appFileExt
   else
-    echo mpich2-$1-win-x86-64.$appFileExt
+    echo $appName-$2.amd64.$appFileExt
   fi
 }
 
@@ -100,7 +84,7 @@ GE_getfilename()
 #
 GE_getfolder()
 {
-  echo platforms/$WM_ARCH$WM_COMPILER/mpich2-$1
+  echo $appName-$1
 }
 
 
@@ -121,24 +105,11 @@ GE_levels()
 #
 GE_exe_msi_unpack()
 {
-  mkdir "$testFile" > /dev/null 2>&1 && \
-  mkdir -p $2/bin > /dev/null 2>&1 &&
-  mkdir -p $2/lib > /dev/null 2>&1 &&
-  mkdir -p $2/include > /dev/null 2>&1 && {
-    7z x "$1" -o"$testFile"/ _* > /dev/null
-    cd $testFile
-    TOUNPACK=`ls -1A _*`
-    7z x $TOUNPACK > /dev/null
-    rm $TOUNPACK
-    unset TOUNPACK
-    find . -name "_*" | xargs grep 'MPI_INCLUDED' -sl | xargs -I {} mv {} $2/include/mpi.h
-    find . -name "_*" | xargs grep 'MPIO_INCLUDE' -sl | xargs -I {} mv {} $2/include/mpio.h
-    find . -name "_*" | xargs grep 'MPICH_IGNORE_CXX_SEEK' -sl | xargs -I {} mv {} $2/include/mpicxx.h
-    find . -name "_*" | xargs grep -e 'mpich2mpi\.dll.MPID_Wtick' -sl | xargs -I {} mv {} $2/lib/mpich2mpi.dll
-    rm _*
-    cd ${WM_THIRD_PARTY_DIR}
-  }
-  [ -n "$testFile" -a -d "$testFile" ] && rm -rf "$testFile"
+  mkdir "$testFile" && \
+    7z x "$1" -o"$testFile" 1>/dev/null #&& \
+#     mkdir -p $2 > /dev/null 2>&1  && \
+#     mv "$testFile"/\$_OUTDIR/* "$2/"
+#   [ -n "$testFile" -a -d "$testFile" ] && rm -rf "$testFile"
 }
 
 
