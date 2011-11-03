@@ -61,7 +61,7 @@ echo ========================================
 echo "Build Scotch decomposition library $SCOTCH_VERSION"
 echo "    $SCOTCH_ARCH_PATH"
 
-scotchMakefile=Make.inc/Makefile.inc.$WM_COMPILER
+scotchMakefile=../../etc/wmakeFiles/scotch/Makefile.inc.$WM_COMPILER
 
 if isMinGW && [ ! -e "$SCOTCH_VERSION/mingw.patch.complete" ]; then
 (
