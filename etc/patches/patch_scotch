@@ -146,6 +146,38 @@ index 0000000..591a532
 +echo "else" >> dummysizes.exe
 +echo "cp \$2_${mingw_version} \$2" >> dummysizes.exe
 +echo "fi" >> dummysizes.exe
+diff --git a/src/libscotch/library_dgraph_stat.c b/src/libscotch/library_dgraph_stat.c
+index ad77aca..24fce3f 100644
+--- a/src/libscotch/library_dgraph_stat.c
++++ b/src/libscotch/library_dgraph_stat.c
+@@ -60,8 +60,13 @@
+ **  The static variables.
+ */
+ 
++#if defined(WIN32) || defined(WIN64)
++#define DEFERRED_ADDRESS(address) 0
++#else
++#define DEFERRED_ADDRESS(address) address
++#endif
+ static int                  dgraphstatblentab[2] = { 7, 3 };
+-static MPI_Datatype         dgraphstattypetab[2] = { GNUM_MPI, MPI_DOUBLE };
++static MPI_Datatype         dgraphstattypetab[2] = { DEFERRED_ADDRESS(GNUM_MPI), DEFERRED_ADDRESS(MPI_DOUBLE) };
+ 
+ /************************************/
+ /*                                  */
+@@ -145,6 +150,12 @@ double *                    edlodltptr)
+   double              edlolocdlt;
+   int                 o;
+ 
++#if defined(WIN32) || defined(WIN64)
++  //Had to re-route the initiallization of dgraphstattypetab, for compatibility with MinGW dllimports
++  dgraphstattypetab[0] = GNUM_MPI;
++  dgraphstattypetab[1] = MPI_DOUBLE;
++#endif
++
+   srcgrafptr = (Dgraph *) grafptr;
+ 
+   velolocdlt = 0.0L;
 diff --git a/src/libscotch/scotch.h_mingw32 b/src/libscotch/scotch.h_mingw32
 new file mode 100755
 index 0000000..7fc195f
