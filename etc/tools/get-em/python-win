@@ -96,7 +96,7 @@ GE_getfilename()
 #
 GE_getfolder()
 {
-  echo $appName-$1
+  echo platforms/$WM_ARCH$WM_COMPILER/$appName-$1
 }
 
 
