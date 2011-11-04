@@ -23,10 +23,22 @@
 #
 #------------------------------------------------------------------------------
 
-versionVar="python_version"
+versionVar="PYTHON_VERSION"
 appName="python"
-appDefaultSep="-"
+appDefaultSep="" #not needed
 appFileExt="msi"
+
+
+# get PYTHON_VERSION, PYTHON_ARCH_PATH
+if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config/python-win.sh`
+then
+    . $settings
+else
+    echo
+    echo "Error: no config/python.sh settings"
+    echo
+    exit 1
+fi
 
 
 #
