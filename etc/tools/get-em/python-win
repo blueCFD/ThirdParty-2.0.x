@@ -122,8 +122,7 @@ GE_exe_msi_unpack()
     mkdir -p $2 > /dev/null 2>&1  && \
     { 
       7z x "$testFile/python" "*.h" -o"$2/include/" 1>/dev/null
-      7z x "$testFile/python" "*.a" -o"$2/lib/" 1>/dev/null
-      find "$2/lib" -name "*python*.a" | xargs -I {} mv {} "$2/lib/libpython.a"
+      7z x "$testFile/python" "*python*.dll" -o"$2/lib/" 1>/dev/null
     }
   [ -n "$testFile" -a -d "$testFile" ] && rm -rf "$testFile"
 }
