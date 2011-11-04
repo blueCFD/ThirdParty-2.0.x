@@ -118,10 +118,14 @@ GE_levels()
 GE_exe_msi_unpack()
 {
   mkdir "$testFile" && \
-    7z x "$1" -o"$testFile" 1>/dev/null #&& \
-#     mkdir -p $2 > /dev/null 2>&1  && \
-#     mv "$testFile"/\$_OUTDIR/* "$2/"
-#   [ -n "$testFile" -a -d "$testFile" ] && rm -rf "$testFile"
+    7z x "$1" -o"$testFile" python 1>/dev/null && \
+    mkdir -p $2 > /dev/null 2>&1  && \
+    { 
+      7z x "$testFile/python" "*.h" -o"$2/include/"
+      7z x "$testFile/python" "*.a" -o"$2/lib/"
+      find "$2/lib" -name "*python*.a" | xargs -I {} mv {} "$2/lib/libpython.a"
+    }
+  [ -n "$testFile" -a -d "$testFile" ] && rm -rf "$testFile"
 }
 
 
