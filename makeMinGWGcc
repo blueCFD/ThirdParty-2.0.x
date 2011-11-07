@@ -604,9 +604,18 @@ final_tweaks()
   fi
 
   if [ $CROSS4WIN -eq 0 ]; then
+
     #fix the float.h issue
     cd $WM_THIRD_PARTY_DIR
     ./fixSystemMingw force
+
+  else #if [ $CROSS4WIN -eq 1 ]; then
+
+    cd ${PREFIX}/bin
+    for afile in windres.exe dlltool.exe; do
+      ln -s $afile ${TARGET}-$afile
+    done
+
   fi
 
   echo "Installation complete!"
