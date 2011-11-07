@@ -35,7 +35,7 @@ then
     . $settings
 else
     echo
-    echo "Error: no config/python.sh settings"
+    echo "Error: no config/python-win.sh settings"
     echo
     exit 1
 fi
