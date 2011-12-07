@@ -41,8 +41,10 @@ INSTPACK_X86_64="mpi_x64.msi"
 # INSTPACK_X86_64="sdk_x64.msi"
 if [ "x$WM_ARCH_OPTION" = "x64" ]; then
   INSTPACK_FILE=$INSTPACK_X86_64
+  DLLVERNUM="64"
 else
   INSTPACK_FILE=$INSTPACK_X86
+  DLLVERNUM=""
 fi
 
 if ! isMinGW; then
@@ -85,10 +87,12 @@ unpack_files()
   {
     7z x $DownloadRepository/$INSTPACK_FILE -o$SRCDIR/ product.cab > /dev/null && \
     cd $SRCDIR && \
-    7z x product.cab mpi*.h msmpi.dll > /dev/null
+    7z x product.cab mpi*.h msmpi${DLLVERNUM}.dll > /dev/null
   } || {
-    7z x $DownloadRepository/$INSTPACK_FILE -o$SRCDIR/ mpi*.h msmpi.dll > /dev/null
+    7z x $DownloadRepository/$INSTPACK_FILE -o$SRCDIR/ mpi*.h msmpi${DLLVERNUM}.dll > /dev/null
   }
+
+  [ -n "${DLLVERNUM}" ] && mv msmpi${DLLVERNUM}.dll msmpi.dll
 
 }
 
