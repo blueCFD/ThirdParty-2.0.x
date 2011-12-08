@@ -115,12 +115,14 @@ function copy_and_link_msmpi
 
 function create_gcccompatible_library
 {
+  echo -e "\033[1m creating libmpi.a \033[0m"
   if [ -n "${DLLVERNUM}" ]; then
-    echo -e "\033[1m creating libmpi.a \033[0m"
     cd lib
     pexports -o msmpi.dll > libmpi.def
     WM_DLLTOOL=`echo $WM_CC | sed s/gcc/dlltool/`
     $WM_DLLTOOL -d libmpi.def -l libmpi.a -D msmpi.dll
+  else
+    cp $SRCDIR/*.a lib/
   fi
 }
 
