@@ -88,11 +88,14 @@ unpack_files()
     7z x $DownloadRepository/$INSTPACK_FILE -o$SRCDIR/ product.cab > /dev/null && \
     cd $SRCDIR && \
     7z x product.cab mpi*.h msmpi${DLLVERNUM}.dll > /dev/null
+    [ -z "${DLLVERNUM}" ] && 7z x product.cab MSMPI_32 > /dev/null
   } || {
     7z x $DownloadRepository/$INSTPACK_FILE -o$SRCDIR/ mpi*.h msmpi${DLLVERNUM}.dll > /dev/null
+    [ -z "${DLLVERNUM}" ] && 7z x $DownloadRepository/$INSTPACK_FILE -o$SRCDIR/ MSMPI_32 > /dev/null
   }
 
   [ -n "${DLLVERNUM}" ] && mv msmpi${DLLVERNUM}.dll msmpi.dll
+  [ -z "${DLLVERNUM}" ] && mv MSMPI_32 libmpi.a
 
 }
 
@@ -112,11 +115,13 @@ function copy_and_link_msmpi
 
 function create_gcccompatible_library
 {
-  echo -e "\033[1m creating libmpi.a \033[0m"
-  cd lib
-  pexports -o msmpi.dll > libmpi.def
-  WM_DLLTOOL=`echo $WM_CC | sed s/gcc/dlltool/`
-  $WM_DLLTOOL -d libmpi.def -l libmpi.a -D msmpi.dll
+  if [ -n "${DLLVERNUM}" ]; then
+    echo -e "\033[1m creating libmpi.a \033[0m"
+    cd lib
+    pexports -o msmpi.dll > libmpi.def
+    WM_DLLTOOL=`echo $WM_CC | sed s/gcc/dlltool/`
+    $WM_DLLTOOL -d libmpi.def -l libmpi.a -D msmpi.dll
+  fi
 }
 
 
@@ -160,9 +165,10 @@ echo '--- mpi.h_orig  2011-01-18 15:11:38.284485101 +0000
  #else
 ' | patch -p0
 
-  cat mpi.h | sed -e 's=\#define MPIAPI __stdcall=\#define MPIAPI=' > mpi.h_tmp
-  mv -f mpi.h_tmp mpi.h
-
+  if [ -n "${DLLVERNUM}" ]; then
+    cat mpi.h | sed -e 's=\#define MPIAPI __stdcall=\#define MPIAPI=' > mpi.h_tmp
+    mv -f mpi.h_tmp mpi.h
+  fi
 }
 
 
