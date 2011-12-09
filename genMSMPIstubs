@@ -25,7 +25,7 @@
 #
 # Description
 #     This script generates the link library and prepares the include
-#   files for MSMPI, based on HPC Pack 2008 R2 SP1 MS-MPI Redistributable Package:
+#   files for MSMPI, based on HPC Pack 2008 R2 SP3 MS-MPI Redistributable Package:
 #      http://www.microsoft.com/download/en/details.aspx?id=14737
 #   It will need 7zip and wget installed and visible from the shell, since it
 #   will download the installation packages that have the necessary files.
